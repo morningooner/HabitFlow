@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    tools:layout_editor_absoluteX="36dp"
+    tools:layout_editor_absoluteY="-170dp">
+
+    <TextView
+        android:id="@+id/logInTextView"
+        android:layout_width="67dp"
+        android:layout_height="36dp"
+        android:layout_marginBottom="406dp"
+        android:text="Log In"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.266" />
+
+    <Button
+        android:id="@+id/logInButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log In"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.467"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.695" />
+
+    <Button
+        android:id="@+id/signUpButtons"
+        android:layout_width="105dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:text="Sign Up"
+        android:textColor="#1747CE"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.637"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.774" />
+
+    <TextView
+        android:id="@+id/textViewNoAccount"
+        android:layout_width="149dp"
+        android:layout_height="30dp"
+        android:text="Don't have an account?"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.27"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.777" />
+
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="95dp"
+        android:layout_height="138dp" />
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="363dp"
+        android:layout_height="268dp"
+        android:background="@android:drawable/alert_light_frame"
+        android:outlineAmbientShadowColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.388">
+
+    </FrameLayout>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/textInputUsername"
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:hint="Username"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.596"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.374" />
+
+    <TextView
+        android:id="@+id/textViewPassword"
+        android:layout_width="160dp"
+        android:layout_height="42dp"
+        android:text="Password"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.382"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.473" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/textInputPassword"
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:hint="Password"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.596"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.536" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="68dp"
+        android:layout_height="69dp"
+        app:srcCompat="@drawable/username"
+        tools:layout_editor_absoluteX="38dp"
+        tools:layout_editor_absoluteY="195dp" />
+
+    <TextView
+        android:id="@+id/textViewUsername"
+        android:layout_width="244dp"
+        android:layout_height="42dp"
+        android:text="Username"
+        android:textSize="20sp"
+        tools:layout_editor_absoluteX="96dp"
+        tools:layout_editor_absoluteY="215dp" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="55dp"
+        android:layout_height="64dp"
+        app:srcCompat="@drawable/password"
+        tools:layout_editor_absoluteX="38dp"
+        tools:layout_editor_absoluteY="315dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
