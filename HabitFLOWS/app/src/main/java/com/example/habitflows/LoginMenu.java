@@ -57,9 +57,9 @@ public class LoginMenu extends AppCompatActivity {
         //Less refined checking
         //Check if current user already logged in, kinda like SharedPreference
         if(mAuth.getCurrentUser() != null) {
-                Intent intent = new Intent(LoginMenu.this, MainMenu.class);
-                startActivity(intent);
-                finish();
+            Intent intent = new Intent(LoginMenu.this, MainMenu.class);
+            startActivity(intent);
+            finish();
         }
 
         signUpLinkBtn.setOnClickListener(new View.OnClickListener() {

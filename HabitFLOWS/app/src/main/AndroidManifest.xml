@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HabitFLOWS">
         <activity
+            android:name=".Profile"
+            android:exported="false" />
+        <activity
             android:name=".MainMenu"
             android:exported="false" />
         <activity
