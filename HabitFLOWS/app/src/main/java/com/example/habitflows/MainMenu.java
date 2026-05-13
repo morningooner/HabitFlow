@@ -15,8 +15,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainMenu extends AppCompatActivity {
-
     private FirebaseAuth mAuth;
+    Button btnProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +36,15 @@ public class MainMenu extends AppCompatActivity {
                 Intent intent = new Intent(MainMenu.this, LoginMenu.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        btnProfile = findViewById(R.id.Profile);
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainMenu.this, Profile.class);
+                startActivity(intent);
             }
         });
 

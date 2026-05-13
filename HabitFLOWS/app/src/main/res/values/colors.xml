@@ -9,4 +9,5 @@
     <color name="teal_700">#FF018786</color>
     <color name="background_black">#121212</color>
     <color name="surface_dark">#1E1E1E</color>
+    <color name="whiteText">#FFFFFF</color>
 </resources>
