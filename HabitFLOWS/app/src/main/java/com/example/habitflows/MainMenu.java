@@ -28,6 +28,7 @@ public class MainMenu extends AppCompatActivity {
 
         TextView mainMenuHomeTV4 = findViewById(R.id.mainMenuHomeTV4);
         Button mainMenuLogoutBtn = findViewById(R.id.mainMenuLogoutBtn);
+        btnProfile = findViewById(R.id.Profile);
 
         mainMenuLogoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,7 +40,6 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 
-        btnProfile = findViewById(R.id.Profile);
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

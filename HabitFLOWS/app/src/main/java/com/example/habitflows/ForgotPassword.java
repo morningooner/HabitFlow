@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -33,29 +35,30 @@ public class ForgotPassword extends AppCompatActivity {
 
         Button forgetPwdBtn = findViewById(R.id.forgetPwdBtn);
         Button forgetPwdBtnLogin = findViewById(R.id.forgetPwdBtnLogin);
+        EditText emailAddress = findViewById(R.id.forgetPwdEmail);
 
-        /*forgetPwdBtn.setOnClickListener(new View.OnClickListener() {
+        forgetPwdBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.sendPasswordResetEmail(mAuth.getCurrentUser().getEmail()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                String emailAddressReset = emailAddress.getText().toString().trim();
+
+                if (emailAddressReset.isEmpty()){
+                    Toast.makeText(ForgotPassword.this, "Please enter email", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mAuth.sendPasswordResetEmail(emailAddressReset).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(ForgotPassword.this, "Email sent.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ForgotPassword.this, "Reset link sent.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ForgotPassword.this, "Error detected.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
-        });*/
-
-        //Placeholder
-        forgetPwdBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ForgotPassword.this, LoginMenu.class);
-                startActivity(intent);
-                finish();
-            }
         });
+
 
         forgetPwdBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
