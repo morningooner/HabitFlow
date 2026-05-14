@@ -1,7 +1,9 @@
 package com.example.habitflows;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -34,12 +36,21 @@ public class Profile extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         ivProfile = findViewById(R.id.ivProfile);
+        ImageView ivBack = findViewById(R.id.ivBack);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
 
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Profile.this, MainMenu.class);
+                startActivity(intent);
+            }
         });
 
         ivProfile.setOnClickListener(v -> {
