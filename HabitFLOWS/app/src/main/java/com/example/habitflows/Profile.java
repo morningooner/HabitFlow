@@ -1,5 +1,7 @@
 package com.example.habitflows;
 
+import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +21,6 @@ import androidx.core.view.WindowInsetsCompat;
 public class Profile extends AppCompatActivity {
 
     ImageView ivProfile;
-
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
             registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                 // Callback is invoked after the user selects a media item or closes the

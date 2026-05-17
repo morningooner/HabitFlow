@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainMenu extends AppCompatActivity {
     private FirebaseAuth mAuth;
     Button btnProfile;
+    Button btnHabit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,8 @@ public class MainMenu extends AppCompatActivity {
         TextView mainMenuHomeTV4 = findViewById(R.id.mainMenuHomeTV4);
         Button mainMenuLogoutBtn = findViewById(R.id.mainMenuLogoutBtn);
         btnProfile = findViewById(R.id.Profile);
+        btnHabit = findViewById(R.id.btnHabit);
+
 
         mainMenuLogoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,6 +41,13 @@ public class MainMenu extends AppCompatActivity {
                 Intent intent = new Intent(MainMenu.this, LoginMenu.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+        btnHabit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainMenu.this, Habit.class);
+                startActivity(intent);
             }
         });
 
