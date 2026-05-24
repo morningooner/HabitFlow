@@ -2,7 +2,6 @@ package com.example.habitflows;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -11,13 +10,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class Statistics extends AppCompatActivity {
+public class StatsMenu extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_statistics);
+        setContentView(R.layout.activity_stats_menu);
 
         ImageView btnBackStats = findViewById(R.id.btnBackStats);
 
@@ -28,7 +27,7 @@ public class Statistics extends AppCompatActivity {
         });
 
         btnBackStats.setOnClickListener(v -> {
-            Intent intent = new Intent(Statistics.this, MainMenu.class);
+            Intent intent = new Intent(StatsMenu.this, MainMenu.class);
             startActivity(intent);
             finish();
         });

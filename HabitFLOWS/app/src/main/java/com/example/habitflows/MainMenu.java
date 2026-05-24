@@ -30,6 +30,7 @@ public class MainMenu extends AppCompatActivity {
 
         TextView mainMenuHomeTV4 = findViewById(R.id.mainMenuHomeTV4);
         Button mainMenuLogoutBtn = findViewById(R.id.mainMenuLogoutBtn);
+        Button btnStats = findViewById(R.id.btnStats);
         btnProfile = findViewById(R.id.Profile);
         btnHabit = findViewById(R.id.btnHabit);
 
@@ -55,6 +56,14 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainMenu.this, Profile.class);
+                startActivity(intent);
+            }
+        });
+
+        btnStats.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainMenu.this, Statistics.class);
                 startActivity(intent);
             }
         });
