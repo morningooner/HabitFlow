@@ -35,6 +35,12 @@
             android:name=".HomeMenu"
             android:exported="false" />
         <activity
+            android:name=".Statistics"
+            android:exported="false" />
+        <activity
+            android:name=".playHabit"
+            android:exported="false" />
+        <activity
             android:name=".SignUpMenu"
             android:exported="false" />
         <activity

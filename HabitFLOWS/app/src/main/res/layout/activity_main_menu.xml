@@ -14,8 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:background="@color/purple_700"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="134dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/mainMenuHomeTV"
@@ -76,115 +75,143 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Main Actions Grid -->
-    <GridLayout
-        android:id="@+id/gridLayout"
+    <!-- Main Actions Grid wrapped in a ScrollView to accommodate the new buttons -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:columnCount="2"
-        android:rowCount="1"
-        app:layout_constraintTop_toBottomOf="@id/welcomeCard"
-        tools:layout_editor_absoluteX="16dp">
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/mainMenuLogoutBtn"
+        app:layout_constraintTop_toBottomOf="@id/welcomeCard">
 
-        <!-- Habit Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="160dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/surface_dark"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="4dp">
+        <GridLayout
+            android:id="@+id/gridLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:columnCount="2">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnHabit"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:text="My Habits"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:icon="@android:drawable/ic_menu_today"
-                app:iconGravity="top"
-                app:iconPadding="12dp"
-                app:iconSize="48dp"
-                app:iconTint="@color/purple_200" />
+            <!-- Habit Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@color/surface_dark"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp">
 
-        </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnHabit"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:text="My Habits"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:icon="@android:drawable/ic_menu_today"
+                    app:iconGravity="top"
+                    app:iconPadding="12dp"
+                    app:iconSize="48dp"
+                    app:iconTint="@color/purple_200" />
+            </com.google.android.material.card.MaterialCardView>
 
-        <!-- Profile Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="160dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/surface_dark"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="4dp">
+            <!-- Profile Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@color/surface_dark"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/Profile"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:padding="16dp"
-                android:text="Profile"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:icon="@android:drawable/ic_menu_myplaces"
-                app:iconGravity="top"
-                app:iconPadding="12dp"
-                app:iconSize="48dp"
-                app:iconTint="@color/purple_200" />
-        </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/Profile"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:text="Profile"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:icon="@android:drawable/ic_menu_myplaces"
+                    app:iconGravity="top"
+                    app:iconPadding="12dp"
+                    app:iconSize="48dp"
+                    app:iconTint="@color/purple_200" />
+            </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="160dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/surface_dark"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="4dp">
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnStats"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="175dp"
-                android:layout_height="152dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:text="Stats"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:icon="@android:drawable/ic_menu_sort_by_size"
-                app:iconGravity="top"
-                app:iconPadding="12dp"
-                app:iconSize="48dp"
-                app:iconTint="@color/purple_200"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.101"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.844" />
-        </com.google.android.material.card.MaterialCardView>
+            <!-- Stats Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@color/surface_dark"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp">
 
-    </GridLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnStatistics"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:text="Stats"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:icon="@android:drawable/ic_menu_sort_by_size"
+                    app:iconGravity="top"
+                    app:iconPadding="12dp"
+                    app:iconSize="48dp"
+                    app:iconTint="@color/purple_200" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Play Habit Button 1 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@color/surface_dark"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPlayHabit"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:text="Play Habit"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:icon="@drawable/outline_autoplay_24"
+                    app:iconGravity="top"
+                    app:iconPadding="12dp"
+                    app:iconSize="48dp"
+                    app:iconTint="@color/purple_200" />
+            </com.google.android.material.card.MaterialCardView>
+        </GridLayout>
+    </ScrollView>
 
     <!-- Logout Button -->
     <com.google.android.material.button.MaterialButton
@@ -199,7 +226,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,6 +19,8 @@ public class MainMenu extends AppCompatActivity {
     private FirebaseAuth mAuth;
     Button btnProfile;
     Button btnHabit;
+    Button btnPlayHabit;
+    Button btnStatistics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +32,11 @@ public class MainMenu extends AppCompatActivity {
 
         TextView mainMenuHomeTV4 = findViewById(R.id.mainMenuHomeTV4);
         Button mainMenuLogoutBtn = findViewById(R.id.mainMenuLogoutBtn);
-        Button btnStats = findViewById(R.id.btnStats);
+        Button btnStats = findViewById(R.id.btnStatistics);
         btnProfile = findViewById(R.id.Profile);
         btnHabit = findViewById(R.id.btnHabit);
-
+        btnPlayHabit = findViewById(R.id.btnPlayHabit);
+        btnStatistics = findViewById(R.id.btnStatistics);
 
         mainMenuLogoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,13 +63,22 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 
-        btnStats.setOnClickListener(new View.OnClickListener() {
+        btnStatistics.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainMenu.this, Statistics.class);
                 startActivity(intent);
             }
         });
+
+        btnPlayHabit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainMenu.this, playHabit.class);
+                startActivity(intent);
+            }
+        });
+
 
         mainMenuHomeTV4.setText(mAuth.getCurrentUser().getDisplayName());
 

@@ -49,10 +49,132 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Summary Card -->
+            <!-- Select Habit Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSelectHabit"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="24dp"
+                android:text="Choose Habit to View"
+                android:textColor="@color/whiteText"
+                app:cornerRadius="16dp"
+                app:icon="@android:drawable/ic_menu_agenda" />
+
+            <!-- Detailed Stats Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvHabitDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/surface_dark"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:id="@+id/tvDetailName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Habit Name"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                        android:textColor="@color/whiteText"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="16dp"
+                        android:background="#1AFFFFFF" />
+
+                    <GridLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:columnCount="2"
+                        android:rowCount="2">
+
+                        <!-- Duration -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_marginBottom="16dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="DURATION"
+                                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                                android:textColor="#80FFFFFF" />
+                            <TextView
+                                android:id="@+id/tvDetailDuration"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="-- Days"
+                                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                                android:textColor="@color/purple_200"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <!-- Start Date -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_marginBottom="16dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="START DATE"
+                                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                                android:textColor="#80FFFFFF" />
+                            <TextView
+                                android:id="@+id/tvDetailStart"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="--"
+                                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                                android:textColor="@color/whiteText" />
+                        </LinearLayout>
+
+                        <!-- End Date -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ESTIMATED END"
+                                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                                android:textColor="#80FFFFFF" />
+                            <TextView
+                                android:id="@+id/tvDetailEnd"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="--"
+                                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                                android:textColor="@color/whiteText" />
+                        </LinearLayout>
+
+                    </GridLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Overall Summary Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
                 app:cardBackgroundColor="@color/surface_dark"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp">
@@ -68,18 +190,19 @@
                         android:layout_height="wrap_content"
                         android:progress="75"
                         app:indicatorColor="@color/purple_200"
-                        app:indicatorSize="100dp"
+                        app:indicatorSize="80dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:trackColor="#1AFFFFFF"
-                        app:trackThickness="10dp" />
+                        app:trackThickness="8dp" />
 
                     <TextView
+                        android:id="@+id/tvOverallPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="75%"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
                         android:textColor="@color/whiteText"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@id/cpOverall"
@@ -101,7 +224,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Weekly Progress"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
                             android:textColor="@color/whiteText"
                             android:textStyle="bold" />
 
@@ -109,187 +232,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="You're doing great! You've completed 15 habits this week."
+                            android:text="Overview of all your habits"
                             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                             android:textColor="#B3FFFFFF" />
                     </LinearLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Stats Grid -->
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:columnCount="2">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardBackgroundColor="@color/surface_dark"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="12"
-                            android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                            android:textColor="@color/purple_200"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Best Streak"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                            android:textColor="#80FFFFFF" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_marginStart="8dp"
-                    app:cardBackgroundColor="@color/surface_dark"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="450"
-                            android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                            android:textColor="@color/purple_200"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Total Points"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                            android:textColor="#80FFFFFF" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </GridLayout>
-
-            <!-- Habit Breakdown -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="12dp"
-                android:text="Habit Breakdown"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="@color/whiteText"
-                android:textStyle="bold" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/surface_dark"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/tvH1Name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Morning Meditation"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                        android:textColor="@color/whiteText"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="85%"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                        android:textColor="@color/purple_200"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.google.android.material.progressindicator.LinearProgressIndicator
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:progress="85"
-                        app:indicatorColor="@color/purple_200"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvH1Name"
-                        app:trackColor="#1AFFFFFF"
-                        app:trackCornerRadius="4dp" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                app:cardBackgroundColor="@color/surface_dark"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/tvH2Name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Daily Workout"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                        android:textColor="@color/whiteText"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="60%"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                        android:textColor="@color/purple_200"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.google.android.material.progressindicator.LinearProgressIndicator
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:progress="60"
-                        app:indicatorColor="@color/purple_200"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvH2Name"
-                        app:trackColor="#1AFFFFFF"
-                        app:trackCornerRadius="4dp" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>

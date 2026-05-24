@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_black"
+    tools:context=".playHabit">
+
+    <!-- Header Section -->
+    <ImageView
+        android:id="@+id/btnBackPlay"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/circle_button_bg"
+        android:contentDescription="Back"
+        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/outline_arrow_back_24"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/tvHabitPlayName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Focus Session"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:textColor="@color/whiteText"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/btnBackPlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnBackPlay" />
+
+    <!-- Choose Habit Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSelectHabitPlay"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Choose Habit"
+        android:textColor="@color/whiteText"
+        app:cornerRadius="12dp"
+        app:icon="@android:drawable/ic_menu_agenda"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvHabitPlayName" />
+
+    <!-- Timer Visualizer -->
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:max="1000"
+        android:progress="1000"
+        app:indicatorColor="@color/purple_200"
+        app:indicatorSize="280dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnSelectHabitPlay"
+        app:layout_constraintVertical_bias="0.3"
+        app:trackColor="#1AFFFFFF"
+        app:trackThickness="12dp" />
+
+    <TextView
+        android:id="@+id/tvTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="25:00"
+        android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+        android:textColor="@color/whiteText"
+        android:textSize="64sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/progressTimer"
+        app:layout_constraintEnd_toEndOf="@+id/progressTimer"
+        app:layout_constraintStart_toStartOf="@+id/progressTimer"
+        app:layout_constraintTop_toTopOf="@+id/progressTimer" />
+
+    <!-- Controls -->
+    <LinearLayout
+        android:id="@+id/llControls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressTimer">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnResetTimer"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="24dp"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="40dp"
+            app:icon="@android:drawable/ic_menu_revert"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="32dp"
+            app:iconTint="@color/whiteText"
+            app:strokeColor="#33FFFFFF" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPlayPause"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:backgroundTint="@color/purple_200"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="50dp"
+            app:icon="@android:drawable/ic_media_play"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="48dp"
+            app:iconTint="@color/black" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
