@@ -27,150 +27,26 @@
         android:id="@+id/tvHabitHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Habit Tracker"
+        android:text="My Habits"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:textColor="@color/whiteText"
+        android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/btnBackProfile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnBackProfile" />
 
-    <!-- Habit Details Card -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cvHabitDetails"
+    <!-- List of Habits (RecyclerView) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvHabits"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="32dp"
-        app:cardBackgroundColor="@color/surface_dark"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="0dp"
-        app:layout_constraintTop_toBottomOf="@id/btnBackProfile">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="24dp">
-
-            <TextView
-                android:id="@+id/tvHabitName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="Daily Workout"
-                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                android:textColor="@color/whiteText"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/btnDeleteHabit"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <!-- Delete Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDeleteHabit"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:padding="4dp"
-                android:text="Delete"
-                android:textColor="#FF5252"
-                android:textSize="12sp"
-                app:icon="@android:drawable/ic_menu_delete"
-                app:iconSize="14dp"
-                app:iconTint="#FF5252"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <!-- Duration info -->
-            <LinearLayout
-                android:id="@+id/llDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvHabitName">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="DURATION"
-                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                    android:textColor="#80FFFFFF" />
-
-                <TextView
-                    android:id="@+id/tvHabitDuration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="30 Days Goal"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    android:textColor="@color/whiteText" />
-            </LinearLayout>
-
-            <!-- Progress info Label -->
-            <TextView
-                android:id="@+id/tvProgressLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:text="PROGRESS"
-                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                android:textColor="#80FFFFFF"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/llDuration" />
-
-            <!-- Edit Button for Progress -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEditProgress"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:padding="4dp"
-                android:text="Edit"
-                android:textColor="@color/purple_200"
-                android:textSize="12sp"
-                app:icon="@android:drawable/ic_menu_edit"
-                app:iconSize="14dp"
-                app:iconTint="@color/purple_200"
-                app:layout_constraintBottom_toBottomOf="@id/tvProgressLabel"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvProgressLabel" />
-
-            <!-- Progress Bar -->
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/habitProgressIndicator"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:progress="67"
-                app:indicatorColor="@color/purple_200"
-                app:layout_constraintEnd_toStartOf="@+id/tvHabitPercentage"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvProgressLabel"
-                app:trackColor="#1AFFFFFF"
-                app:trackCornerRadius="8dp"
-                app:trackThickness="12dp" />
-
-            <TextView
-                android:id="@+id/tvHabitPercentage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="67%"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="@color/purple_200"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/habitProgressIndicator"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/habitProgressIndicator" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/cvAddHabit"
+        app:layout_constraintTop_toBottomOf="@id/btnBackProfile"
+        tools:listitem="@layout/item_habit" />
 
     <!-- Add Habit Section -->
     <com.google.android.material.card.MaterialCardView
@@ -178,11 +54,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
         app:cardBackgroundColor="@color/surface_dark"
         app:cardCornerRadius="24dp"
-        app:cardElevation="0dp"
-        app:layout_constraintTop_toBottomOf="@id/cvHabitDetails">
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnAddHabit">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -195,11 +71,10 @@
                 android:layout_height="wrap_content"
                 android:text="Create New Habit"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="@color/whiteText"
+                android:textColor="@color/white"
                 android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilHabitName"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -213,11 +88,10 @@
                     android:id="@+id/etHabitName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/whiteText" />
+                    android:textColor="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilDuration"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -232,7 +106,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    android:textColor="@color/whiteText" />
+                    android:textColor="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>

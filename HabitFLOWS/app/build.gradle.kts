@@ -1,14 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
-
     id("com.google.gms.google-services")
 }
 
 android {
     namespace = "com.example.habitflows"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.habitflows"
@@ -48,5 +45,9 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
     implementation("com.google.firebase:firebase-analytics")
-    implementation ("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
+    
+    // For loading images from URL
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
