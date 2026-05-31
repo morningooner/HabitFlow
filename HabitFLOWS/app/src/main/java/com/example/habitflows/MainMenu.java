@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -17,10 +16,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainMenu extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    Button btnProfile;
-    Button btnHabit;
-    Button btnPlayHabit;
-    Button btnStatistics;
+    private Button btnProfile, btnHabit, btnStatistics, btnPlayHabit;
+    private TextView mainMenuHomeTV4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,57 +27,36 @@ public class MainMenu extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        TextView mainMenuHomeTV4 = findViewById(R.id.mainMenuHomeTV4);
+        mainMenuHomeTV4 = findViewById(R.id.mainMenuHomeTV4);
         Button mainMenuLogoutBtn = findViewById(R.id.mainMenuLogoutBtn);
-        Button btnStats = findViewById(R.id.btnStatistics);
         btnProfile = findViewById(R.id.Profile);
         btnHabit = findViewById(R.id.btnHabit);
-        btnPlayHabit = findViewById(R.id.btnPlayHabit);
         btnStatistics = findViewById(R.id.btnStatistics);
+        btnPlayHabit = findViewById(R.id.btnPlayHabit);
 
-        mainMenuLogoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                Intent intent = new Intent(MainMenu.this, LoginMenu.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-        btnHabit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainMenu.this, Habit.class);
-                startActivity(intent);
-            }
+        if (mAuth.getCurrentUser() != null) {
+            String name = mAuth.getCurrentUser().getDisplayName();
+            mainMenuHomeTV4.setText(name != null ? name : "User");
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
         });
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainMenu.this, Profile.class);
-                startActivity(intent);
-            }
+        mainMenuLogoutBtn.setOnClickListener(v -> {
+            mAuth.signOut();
+            startActivity(new Intent(MainMenu.this, LoginMenu.class));
+            finish();
         });
 
-        btnStatistics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainMenu.this, Statistics.class);
-                startActivity(intent);
-            }
-        });
+        btnHabit.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, Habit.class)));
 
-        btnPlayHabit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainMenu.this, playHabit.class);
-                startActivity(intent);
-            }
-        });
+        btnProfile.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, Profile.class)));
 
+        btnStatistics.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, Statistics.class)));
 
-        mainMenuHomeTV4.setText(mAuth.getCurrentUser().getDisplayName());
-
-    };
+        btnPlayHabit.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, playHabit.class)));
+    }
 }

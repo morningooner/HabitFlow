@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHolder> {
@@ -42,23 +40,15 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         holder.tvHabitName.setText(habit.getHabitName());
         holder.tvHabitDuration.setText(habit.getDuration() + " Days Goal");
 
-        // Calculate progress
-        if (habit.getStartDate() != null) {
-            try {
-                LocalDate start = LocalDate.parse(habit.getStartDate());
-                LocalDate today = LocalDate.now();
-                long daysPassed = ChronoUnit.DAYS.between(start, today);
-                
-                int progress = (int) Math.min(Math.max(daysPassed, 0), habit.getDuration());
-                int percentage = (int) ((progress / (float) habit.getDuration()) * 100);
+        // FIXED: Calculate progress based on completedDays from the timer sessions
+        int completed = habit.getCompletedDays();
+        int total = habit.getDuration();
+        
+        int percentage = (total > 0) ? (int) (((float) completed / total) * 100) : 0;
+        percentage = Math.min(percentage, 100); // Cap at 100%
 
-                holder.habitProgressIndicator.setProgress(percentage);
-                holder.tvHabitPercentage.setText(percentage + "%");
-            } catch (Exception e) {
-                holder.habitProgressIndicator.setProgress(0);
-                holder.tvHabitPercentage.setText("0%");
-            }
-        }
+        holder.habitProgressIndicator.setProgress(percentage);
+        holder.tvHabitPercentage.setText(percentage + "%");
 
         holder.btnDeleteHabit.setOnClickListener(v -> {
             if (deleteListener != null) {

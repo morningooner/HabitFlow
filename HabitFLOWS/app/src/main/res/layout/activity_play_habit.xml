@@ -27,7 +27,7 @@
         android:id="@+id/tvHabitPlayName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Focus Session"
+        android:text="Play Habit"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         android:textColor="@color/whiteText"
         android:textStyle="bold"
