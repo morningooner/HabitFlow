@@ -19,13 +19,19 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
 
     private List<HabitModel> habitList;
     private OnHabitDeleteListener deleteListener;
+    private OnHabitEditListener editListener;
 
     public interface OnHabitDeleteListener {
         void onDelete(HabitModel habit);
     }
 
-    public HabitAdapter(List<HabitModel> habitList, OnHabitDeleteListener deleteListener) {
+    public interface OnHabitEditListener {
+        void onEdit(HabitModel habit);
+    }
+
+    public HabitAdapter(List<HabitModel> habitList, OnHabitEditListener editListener, OnHabitDeleteListener deleteListener) {
         this.habitList = habitList;
+        this.editListener = editListener;
         this.deleteListener = deleteListener;
     }
 
@@ -65,6 +71,12 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
                 deleteListener.onDelete(habit);
             }
         });
+
+        holder.btnEditHabit.setOnClickListener(v -> {
+            if (editListener != null) {
+                editListener.onEdit(habit);
+            }
+        });
     }
 
     @Override
@@ -75,7 +87,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
     static class HabitViewHolder extends RecyclerView.ViewHolder {
         TextView tvHabitName, tvHabitDuration, tvHabitPercentage;
         LinearProgressIndicator habitProgressIndicator;
-        Button btnDeleteHabit;
+        Button btnDeleteHabit, btnEditHabit;
 
         public HabitViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -84,6 +96,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
             tvHabitPercentage = itemView.findViewById(R.id.tvHabitPercentage);
             habitProgressIndicator = itemView.findViewById(R.id.habitProgressIndicator);
             btnDeleteHabit = itemView.findViewById(R.id.btnDeleteHabit);
+            btnEditHabit = itemView.findViewById(R.id.btnEditHabit);
         }
     }
 }

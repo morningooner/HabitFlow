@@ -22,26 +22,48 @@
             android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
             android:textColor="@color/whiteText"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/btnDeleteHabit"
+            app:layout_constraintEnd_toStartOf="@+id/llButtons"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnDeleteHabit"
-            style="@style/Widget.Material3.Button.TextButton"
+        <LinearLayout
+            android:id="@+id/llButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:padding="4dp"
-            android:text="Delete"
-            android:textColor="#FF5252"
-            android:textSize="12sp"
-            app:icon="@android:drawable/ic_menu_delete"
-            app:iconSize="14dp"
-            app:iconTint="#FF5252"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditHabit"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="4dp"
+                android:text="Edit"
+                android:textColor="@color/purple_200"
+                android:textSize="12sp"
+                app:icon="@android:drawable/ic_menu_edit"
+                app:iconSize="14dp"
+                app:iconTint="@color/purple_200" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeleteHabit"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="4dp"
+                android:text="Delete"
+                android:textColor="#FF5252"
+                android:textSize="12sp"
+                app:icon="@android:drawable/ic_menu_delete"
+                app:iconSize="14dp"
+                app:iconTint="#FF5252" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/llDuration"
