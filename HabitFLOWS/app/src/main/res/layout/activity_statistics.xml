@@ -27,7 +27,7 @@
         android:id="@+id/tvStatsHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Statistics"
+        android:text="Progress Stats"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         android:textColor="@color/whiteText"
         android:textStyle="bold"
@@ -40,6 +40,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        android:paddingBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnBackStats">
 
@@ -49,7 +51,7 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Select Habit Button -->
+            <!-- Habit Selection Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSelectHabit"
                 style="@style/Widget.Material3.Button.TonalButton"
@@ -70,6 +72,8 @@
                 app:cardBackgroundColor="@color/surface_dark"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
+                app:strokeColor="#1F2937"
+                app:strokeWidth="1dp"
                 tools:visibility="visible">
 
                 <LinearLayout
@@ -87,64 +91,94 @@
                         android:textColor="@color/whiteText"
                         android:textStyle="bold" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="HABIT PROGRESS"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                        android:textColor="#9CA3AF" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="4dp">
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/detailProgressBar"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:progress="0"
+                            app:indicatorColor="@color/purple_200"
+                            app:trackColor="#1F2937"
+                            app:trackCornerRadius="8dp"
+                            app:trackThickness="10dp" />
+
+                        <TextView
+                            android:id="@+id/tvDetailPercentage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="0%"
+                            android:textColor="@color/purple_200"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginVertical="16dp"
-                        android:background="#1AFFFFFF" />
+                        android:layout_marginVertical="24dp"
+                        android:background="#1F2937" />
 
                     <GridLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:columnCount="2"
-                        android:rowCount="2">
+                        android:columnCount="2">
 
-                        <!-- Duration -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:layout_marginBottom="16dp"
+                            android:layout_marginBottom="20dp"
                             android:orientation="vertical">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="DURATION"
-                                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                                android:textColor="#80FFFFFF" />
+                                android:text="TOTAL DAYS"
+                                android:textSize="10sp"
+                                android:textColor="#6B7280" />
                             <TextView
                                 android:id="@+id/tvDetailDuration"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="-- Days"
-                                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                                android:textColor="@color/purple_200"
+                                android:textColor="@color/whiteText"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
-                        <!-- Start Date -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
-                            android:layout_marginBottom="16dp"
                             android:orientation="vertical">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="START DATE"
-                                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                                android:textColor="#80FFFFFF" />
+                                android:text="STARTED ON"
+                                android:textSize="10sp"
+                                android:textColor="#6B7280" />
                             <TextView
                                 android:id="@+id/tvDetailStart"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="--"
-                                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                                android:textColor="@color/whiteText" />
+                                android:textColor="@color/whiteText"
+                                android:textStyle="bold" />
                         </LinearLayout>
 
-                        <!-- End Date -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -154,18 +188,31 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="ESTIMATED END"
-                                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                                android:textColor="#80FFFFFF" />
+                                android:textSize="10sp"
+                                android:textColor="#6B7280" />
                             <TextView
                                 android:id="@+id/tvDetailEnd"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="--"
-                                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                                android:textColor="@color/whiteText" />
+                                android:textColor="@color/whiteText"
+                                android:textStyle="bold" />
                         </LinearLayout>
-
                     </GridLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnResetHabit"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="24dp"
+                        android:text="Reset Progress"
+                        android:textColor="#EF4444"
+                        app:strokeColor="#EF4444"
+                        app:icon="@android:drawable/ic_menu_revert"
+                        app:iconTint="#EF4444"
+                        app:cornerRadius="12dp" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -177,7 +224,9 @@
                 android:layout_marginTop="24dp"
                 app:cardBackgroundColor="@color/surface_dark"
                 app:cardCornerRadius="24dp"
-                app:cardElevation="0dp">
+                app:cardElevation="0dp"
+                app:strokeColor="#1F2937"
+                app:strokeWidth="1dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -188,20 +237,20 @@
                         android:id="@+id/cpOverall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:progress="75"
+                        android:progress="0"
                         app:indicatorColor="@color/purple_200"
                         app:indicatorSize="80dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:trackColor="#1AFFFFFF"
+                        app:trackColor="#1F2937"
                         app:trackThickness="8dp" />
 
                     <TextView
                         android:id="@+id/tvOverallPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="75%"
+                        android:text="0%"
                         android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
                         android:textColor="@color/whiteText"
                         android:textStyle="bold"
@@ -223,7 +272,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Weekly Progress"
+                            android:text="Overall Achievement"
                             android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
                             android:textColor="@color/whiteText"
                             android:textStyle="bold" />
@@ -232,11 +281,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Overview of all your habits"
+                            android:text="Average flow across all habits."
                             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                            android:textColor="#B3FFFFFF" />
+                            android:textColor="#9CA3AF" />
                     </LinearLayout>
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 

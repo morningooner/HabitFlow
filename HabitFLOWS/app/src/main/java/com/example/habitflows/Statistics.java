@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,10 +38,13 @@ public class Statistics extends AppCompatActivity {
     private MaterialButton btnSelectHabit;
 
     private MaterialCardView cvHabitDetail;
-    private TextView tvDetailName, tvDetailDuration, tvDetailStart, tvDetailEnd;
+    private TextView tvDetailName, tvDetailDuration, tvDetailStart, tvDetailEnd, tvDetailPercentage;
+    private LinearProgressIndicator detailProgressBar;
+    private MaterialButton btnResetHabit;
 
     private List<HabitModel> habitList = new ArrayList<>();
     private String[] habitNames;
+    private HabitModel selectedHabit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +66,18 @@ public class Statistics extends AppCompatActivity {
         tvDetailDuration = findViewById(R.id.tvDetailDuration);
         tvDetailStart = findViewById(R.id.tvDetailStart);
         tvDetailEnd = findViewById(R.id.tvDetailEnd);
+        tvDetailPercentage = findViewById(R.id.tvDetailPercentage);
+        detailProgressBar = findViewById(R.id.detailProgressBar);
+        btnResetHabit = findViewById(R.id.btnResetHabit);
 
-        // Handle Back Button
         btnBackStats.setOnClickListener(v -> finish());
-
-        // Handle Habit Selection
         btnSelectHabit.setOnClickListener(v -> showHabitSelectionDialog());
+        
+        btnResetHabit.setOnClickListener(v -> {
+            if (selectedHabit != null) {
+                resetHabitProgress(selectedHabit);
+            }
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -81,9 +91,9 @@ public class Statistics extends AppCompatActivity {
     private void loadHabitStatistics() {
         if (mAuth.getCurrentUser() == null) return;
 
-        String userId = mAuth.getCurrentUser().getUid();
+        String userEmail = mAuth.getCurrentUser().getEmail();
 
-        mDB.collection("Users").document(userId).collection("Habits")
+        mDB.collection("Users").document(userEmail).collection("Habits")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     habitList.clear();
@@ -96,72 +106,102 @@ public class Statistics extends AppCompatActivity {
                             habitList.add(habit);
                             totalCompleted += habit.getCompletedDays();
                             totalDuration += habit.getDuration();
-                            
-                            // Log progress for debugging
-                            float progress = (habit.getDuration() > 0) ? 
-                                    ((float) habit.getCompletedDays() / habit.getDuration()) * 100 : 0;
-                            Log.d("STATS", habit.getHabitName() + " : " + progress + "%");
                         }
                     }
 
-                    if (!habitList.isEmpty()) {
-                        // Calculate overall progress for the circle
-                        int avgProgress = (totalDuration > 0) ? 
-                                (int) (((float) totalCompleted / totalDuration) * 100) : 0;
-                        
-                        cpOverall.setProgress(avgProgress, true);
-                        tvOverallPercent.setText(avgProgress + "%");
+                    // Recalculate and Save Overall Progress to Database
+                    updateOverallUIAndDatabase(totalCompleted, totalDuration);
 
-                        // Prepare names for the selection dialog
+                    if (!habitList.isEmpty()) {
                         habitNames = new String[habitList.size()];
                         for (int i = 0; i < habitList.size(); i++) {
                             habitNames[i] = habitList.get(i).getHabitName();
                         }
                         btnSelectHabit.setEnabled(true);
-                        btnSelectHabit.setText("Choose Habit to View");
+                        
+                        // If a habit is selected, refresh its details from the new data
+                        if (selectedHabit != null) {
+                            for (HabitModel h : habitList) {
+                                if (h.getHabitName().equals(selectedHabit.getHabitName())) {
+                                    displayHabitDetails(h);
+                                    break;
+                                }
+                            }
+                        }
                     } else {
-                        cpOverall.setProgress(0, true);
-                        tvOverallPercent.setText("0%");
                         btnSelectHabit.setEnabled(false);
-                        btnSelectHabit.setText("No Habits Found");
+                        cvHabitDetail.setVisibility(View.GONE);
                     }
                 })
-                .addOnFailureListener(e -> {
-                    Log.e("STATS", "Error loading habits", e);
-                    Toast.makeText(this, "Failed to load habits", Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to load statistics", Toast.LENGTH_SHORT).show());
+    }
+
+    private void updateOverallUIAndDatabase(int totalCompleted, int totalDuration) {
+        int avgProgress = (totalDuration > 0) ? (int) (((float) totalCompleted / totalDuration) * 100) : 0;
+        
+        // Update Circle Progress on UI
+        cpOverall.setProgress(avgProgress, true);
+        tvOverallPercent.setText(avgProgress + "%");
+
+        // Save updated average to the user document
+        if (mAuth.getCurrentUser() != null) {
+            String userEmail = mAuth.getCurrentUser().getEmail();
+            mDB.collection("Users").document(userEmail)
+                    .update("overallProgress", avgProgress)
+                    .addOnFailureListener(e -> Log.e("STATS", "Failed to sync overall progress", e));
+        }
     }
 
     private void showHabitSelectionDialog() {
         if (habitNames == null || habitNames.length == 0) return;
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a Habit");
-        builder.setItems(habitNames, (dialog, which) -> {
-            displayHabitDetails(habitList.get(which));
-        });
-        builder.show();
+        new AlertDialog.Builder(this)
+                .setTitle("Select a Habit")
+                .setItems(habitNames, (dialog, which) -> displayHabitDetails(habitList.get(which)))
+                .show();
     }
 
     private void displayHabitDetails(HabitModel habit) {
+        selectedHabit = habit;
         cvHabitDetail.setVisibility(View.VISIBLE);
         tvDetailName.setText(habit.getHabitName());
         tvDetailDuration.setText(habit.getDuration() + " Days");
-        
-        // Display Start Date
-        String startStr = habit.getStartDate();
-        tvDetailStart.setText(startStr);
+        tvDetailStart.setText(habit.getStartDate());
 
-        // Calculate and Display End Date using Duration
+        int habitProgress = (habit.getDuration() > 0)
+                ? (int) (((float) habit.getCompletedDays() / habit.getDuration()) * 100)
+                : 0;
+
+        detailProgressBar.setProgress(habitProgress, true);
+        tvDetailPercentage.setText(habitProgress + "%");
+
         try {
-            LocalDate startDate = LocalDate.parse(startStr);
+            LocalDate startDate = LocalDate.parse(habit.getStartDate());
             LocalDate endDate = startDate.plusDays(habit.getDuration());
-            
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            tvDetailEnd.setText(endDate.format(formatter));
+            tvDetailEnd.setText(endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         } catch (Exception e) {
-            Log.e("STATS", "Error parsing date", e);
             tvDetailEnd.setText("N/A");
         }
+    }
+
+    private void resetHabitProgress(HabitModel habit) {
+        new AlertDialog.Builder(this)
+                .setTitle("Reset Progress")
+                .setMessage("Are you sure you want to reset '" + habit.getHabitName() + "'? This will restart the goal from today.")
+                .setPositiveButton("Reset", (dialog, which) -> {
+                    String userEmail = mAuth.getCurrentUser().getEmail();
+                    String today = LocalDate.now().toString();
+                    
+                    mDB.collection("Users").document(userEmail).collection("Habits")
+                            .document(habit.getHabitName())
+                            .update("completedDays", 0, "startDate", today)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(this, "Habit restarted!", Toast.LENGTH_SHORT).show();
+                                // Reload logic triggers recalculation of overallProgress and saves it
+                                loadHabitStatistics();
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(this, "Reset failed", Toast.LENGTH_SHORT).show());
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 }
