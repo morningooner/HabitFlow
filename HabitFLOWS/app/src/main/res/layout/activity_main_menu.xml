@@ -195,6 +195,32 @@
                     app:iconSize="32dp"
                     app:iconTint="#F59E0B" />
             </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="140dp"
+                android:layout_margin="8dp"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="#0AFFFFFF"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#12FFFFFF"
+                app:strokeWidth="1dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRankHabit"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="16dp"
+                    android:text="Play Session"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    app:icon="@drawable/outline_autoplay_24"
+                    app:iconGravity="top"
+                    app:iconPadding="10dp"
+                    app:iconSize="32dp"
+                    app:iconTint="#F59E0B" />
+            </com.google.android.material.card.MaterialCardView>
         </GridLayout>
     </ScrollView>
 

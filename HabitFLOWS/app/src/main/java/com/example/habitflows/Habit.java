@@ -70,6 +70,7 @@ public class Habit extends AppCompatActivity {
         fabAddHabit.setOnClickListener(v -> showCreateHabitDialog());
     }
 
+    //Load habit everytime onCreate and everytime changed
     private void listenForHabits() {
         if (mAuth.getCurrentUser() == null) return;
 
