@@ -7,7 +7,8 @@ public class HabitModel {
     private int duration;
     private String unit;
     private String startDate;
-    private int completedDays; // Added for progress tracking
+    private int completedDays;
+    private boolean isTodayCompleted; // Field for checklist status
 
     public HabitModel() {}
 
@@ -17,6 +18,7 @@ public class HabitModel {
         this.unit = unit;
         this.startDate = LocalDate.now().toString();
         this.completedDays = 0;
+        this.isTodayCompleted = false;
     }
 
     public String getHabitName() { return habitName; }
@@ -33,4 +35,7 @@ public class HabitModel {
 
     public int getCompletedDays() { return completedDays; }
     public void setCompletedDays(int completedDays) { this.completedDays = completedDays; }
+
+    public boolean isTodayCompleted() { return isTodayCompleted; }
+    public void setTodayCompleted(boolean todayCompleted) { isTodayCompleted = todayCompleted; }
 }

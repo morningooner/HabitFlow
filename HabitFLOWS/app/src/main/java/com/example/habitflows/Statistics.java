@@ -3,7 +3,9 @@ package com.example.habitflows;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,7 @@ public class Statistics extends AppCompatActivity {
     private TextView tvDetailName, tvDetailDuration, tvDetailStart, tvDetailEnd, tvDetailPercentage;
     private LinearProgressIndicator detailProgressBar;
     private MaterialButton btnResetHabit;
+    private LinearLayout llHabitChecklist;
 
     private List<HabitModel> habitList = new ArrayList<>();
     private String[] habitNames;
@@ -69,6 +72,7 @@ public class Statistics extends AppCompatActivity {
         tvDetailPercentage = findViewById(R.id.tvDetailPercentage);
         detailProgressBar = findViewById(R.id.detailProgressBar);
         btnResetHabit = findViewById(R.id.btnResetHabit);
+        llHabitChecklist = findViewById(R.id.llHabitChecklist);
 
         btnBackStats.setOnClickListener(v -> finish());
         btnSelectHabit.setOnClickListener(v -> showHabitSelectionDialog());
@@ -111,6 +115,7 @@ public class Statistics extends AppCompatActivity {
 
                     // Recalculate and Save Overall Progress to Database
                     updateOverallUIAndDatabase(totalCompleted, totalDuration);
+                    populateHabitChecklist();
 
                     if (!habitList.isEmpty()) {
                         habitNames = new String[habitList.size()];
@@ -134,6 +139,44 @@ public class Statistics extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Failed to load statistics", Toast.LENGTH_SHORT).show());
+    }
+
+    private void populateHabitChecklist() {
+        llHabitChecklist.removeAllViews();
+        if (habitList.isEmpty()) return;
+
+        for (HabitModel habit : habitList) {
+            CheckBox checkBox = new CheckBox(this);
+            checkBox.setText(habit.getHabitName() + (habit.isTodayCompleted() ? " - Complete" : " - Not Complete"));
+            checkBox.setTextColor(getResources().getColor(R.color.whiteText, getTheme()));
+            checkBox.setChecked(habit.isTodayCompleted());
+            checkBox.setTextSize(16);
+            checkBox.setPadding(10, 10, 10, 10);
+
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                updateHabitChecklistStatus(habit, isChecked, checkBox);
+            });
+
+            llHabitChecklist.addView(checkBox);
+        }
+    }
+
+    private void updateHabitChecklistStatus(HabitModel habit, boolean isChecked, CheckBox checkBox) {
+        if (mAuth.getCurrentUser() == null) return;
+        String userEmail = mAuth.getCurrentUser().getEmail();
+
+        mDB.collection("Users").document(userEmail).collection("Habits")
+                .document(habit.getHabitName())
+                .update("todayCompleted", isChecked)
+                .addOnSuccessListener(aVoid -> {
+                    habit.setTodayCompleted(isChecked);
+                    checkBox.setText(habit.getHabitName() + (isChecked ? " - Complete" : " - Not Complete"));
+                    Toast.makeText(this, "Status updated", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    checkBox.setChecked(!isChecked); // Revert UI
+                    Toast.makeText(this, "Failed to update status", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void updateOverallUIAndDatabase(int totalCompleted, int totalDuration) {
@@ -193,7 +236,7 @@ public class Statistics extends AppCompatActivity {
                     
                     mDB.collection("Users").document(userEmail).collection("Habits")
                             .document(habit.getHabitName())
-                            .update("completedDays", 0, "startDate", today)
+                            .update("completedDays", 0, "startDate", today, "todayCompleted", false)
                             .addOnSuccessListener(aVoid -> {
                                 Toast.makeText(this, "Habit restarted!", Toast.LENGTH_SHORT).show();
                                 // Reload logic triggers recalculation of overallProgress and saves it
