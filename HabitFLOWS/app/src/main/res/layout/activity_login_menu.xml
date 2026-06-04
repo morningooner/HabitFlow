@@ -5,124 +5,133 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_black"
+    android:background="@color/denim"
     tools:context=".LoginMenu">
 
-    <View
-        android:id="@+id/viewHeader"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="@color/purple_700"
-        app:layout_constraintTop_toTopOf="parent" />
-
+    <!-- App Title (Solo Leveling System Style) -->
     <TextView
         android:id="@+id/logInTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
+        android:letterSpacing="0.2"
+        android:shadowColor="@color/border"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="15"
         android:text="HabitFLOW"
-        android:textColor="@color/white"
-        android:textSize="40sp"
+        android:textColor="@color/baby_blue"
+        android:textSize="42sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/loginCard"
-        android:layout_width="match_parent"
+    <!-- Main Content Container (System Style) -->
+    <LinearLayout
+        android:id="@+id/loginContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="-40dp"
-        android:layout_marginEnd="24dp"
-        app:cardBackgroundColor="@color/surface_dark"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="12dp"
-        app:layout_constraintTop_toBottomOf="@id/viewHeader">
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/system"
+        android:orientation="vertical"
+        android:padding="48dp"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logInTitle"
+        app:layout_constraintWidth_max="550dp">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="32dp">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:letterSpacing="0.1"
+            android:shadowColor="@color/border"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="12"
+            android:text="SYSTEM LOGIN"
+            android:textColor="@color/baby_blue"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="24dp"
-                android:text="Log In"
-                android:textColor="@color/purple_200"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+        <!-- Email Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:textColorHint="@color/baby_blue"
+            app:boxStrokeColor="@color/baby_blue"
+            app:hintTextColor="@color/baby_blue"
+            app:startIconTint="@color/baby_blue">
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/logInEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
-                android:textColorHint="#888888"
-                app:boxStrokeColor="@color/purple_500"
-                app:hintTextColor="@color/purple_200"
-                app:startIconTint="@color/purple_200">
+                android:inputType="textEmailAddress"
+                android:textColor="@color/white" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/logInEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:textColor="@color/white" />
-            </com.google.android.material.textfield.TextInputLayout>
+        <!-- Password Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Password"
+            android:textColorHint="@color/baby_blue"
+            app:boxStrokeColor="@color/baby_blue"
+            app:hintTextColor="@color/baby_blue"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/baby_blue"
+            app:startIconTint="@color/baby_blue">
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/logInPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="Password"
-                android:textColorHint="#888888"
-                app:boxStrokeColor="@color/purple_500"
-                app:hintTextColor="@color/purple_200"
-                app:passwordToggleTint="@color/purple_200"
-                app:startIconTint="@color/purple_200">
+                android:inputType="textPassword"
+                android:textColor="@color/white" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/logInPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:textColor="@color/white" />
-            </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:id="@+id/tvForgotPwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="12dp"
+            android:text="Forgot Password?"
+            android:textColor="@color/baby_blue"
+            android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/tvForgotPwd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="12dp"
-                android:text="Forgot Password?"
-                android:textColor="@color/purple_200"
-                android:textSize="14sp" />
+        <!-- Login Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/logInButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="32dp"
+            android:text="ACCESS SYSTEM"
+            android:textAllCaps="true"
+            android:textColor="@color/denim"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/baby_blue"
+            app:cornerRadius="4dp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/logInButton"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="32dp"
-                android:text="Login"
-                android:textAllCaps="false"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:backgroundTint="@color/purple_500"
-                app:cornerRadius="16dp" />
+    </LinearLayout>
 
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
+    <!-- Footer Navigation -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
+        android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -132,8 +141,9 @@
             android:id="@+id/textViewNoAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:alpha="0.7"
             android:text="New user?"
-            android:textColor="#AAAAAA"
+            android:textColor="@color/baby_blue"
             android:textSize="16sp" />
 
         <Button
@@ -142,7 +152,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Create Account"
-            android:textColor="@color/purple_200"
+            android:textColor="@color/baby_blue"
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>

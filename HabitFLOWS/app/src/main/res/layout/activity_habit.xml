@@ -1,64 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_black"
+    android:background="@color/denim"
     tools:context=".Habit">
 
-    <!-- Header -->
+    <!-- Header Navigation -->
     <ImageView
         android:id="@+id/btnBackProfile"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/circle_button_bg"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
         android:contentDescription="Back"
-        android:padding="10dp"
+        android:padding="12dp"
+        android:src="@drawable/outline_arrow_back_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/outline_arrow_back_24"
-        app:tint="@color/white" />
+        app:tint="@color/baby_blue" />
 
-    <TextView
-        android:id="@+id/tvHabitHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="My Habits"
-        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/btnBackProfile"
+    <!-- Main Content Container (Solo Leveling System Style) -->
+    <LinearLayout
+        android:id="@+id/notificationContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/system"
+        android:orientation="vertical"
+        android:padding="48dp"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintWidth_max="550dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnBackProfile" />
+        app:layout_constraintTop_toBottomOf="@id/btnBackProfile">
 
-    <!-- List of Habits (RecyclerView) -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvHabits"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:clipToPadding="false"
-        android:paddingBottom="88dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnBackProfile"
-        tools:listitem="@layout/item_habit" />
+        <!-- Screen Title - Extra top margin to clear corner ornaments -->
+        <TextView
+            android:id="@+id/tvHabitHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:letterSpacing="0.1"
+            android:shadowColor="@color/border"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="12"
+            android:text="MY HABITS"
+            android:textColor="@color/baby_blue"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-    <!-- Floating Action Button for Adding Habit -->
+        <!-- Habits List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHabits"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp"
+            tools:listitem="@layout/item_habit" />
+
+    </LinearLayout>
+
+    <!-- Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddHabit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="24dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="40dp"
         android:contentDescription="Add Habit"
         android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="@color/purple_200"
+        app:backgroundTint="@color/baby_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/black" />
+        app:shapeAppearanceOverlay="@style/Widget.Material3.FloatingActionButton.Primary"
+        app:tint="@color/denim" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

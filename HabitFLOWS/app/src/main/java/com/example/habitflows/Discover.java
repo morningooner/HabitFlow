@@ -1,5 +1,6 @@
 package com.example.habitflows;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -18,9 +19,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Discover extends AppCompatActivity {
 
@@ -34,105 +39,139 @@ public class Discover extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_discover);
+        try {
+            EdgeToEdge.enable(this);
+            setContentView(R.layout.activity_discover);
 
-        mAuth = FirebaseAuth.getInstance();
-        mDB = FirebaseFirestore.getInstance();
+            mAuth = FirebaseAuth.getInstance();
+            mDB = FirebaseFirestore.getInstance();
 
-        // Initialize UI
-        ImageView btnBack = findViewById(R.id.btnBackDiscover);
-        rvDiscover = findViewById(R.id.rvDiscover);
+            ImageView btnBack = findViewById(R.id.btnBackDiscover);
+            rvDiscover = findViewById(R.id.rvDiscover);
 
-        if (btnBack != null) {
-            btnBack.setOnClickListener(v -> finish());
-        }
+            if (btnBack != null) btnBack.setOnClickListener(v -> finish());
 
-        setupRecyclerView();
+            setupRecyclerView();
 
-        if (findViewById(R.id.main) != null) {
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
                 Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
                 v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
                 return insets;
             });
-        }
 
-        loadCurrentUserAndUsers();
+            loadCurrentUserAndUsers();
+        } catch (Exception e) {
+            Log.e("Discover", "Crash in onCreate", e);
+            Toast.makeText(this, "Error opening Discover", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void setupRecyclerView() {
         if (rvDiscover == null) return;
-        adapter = new UserAdapter(userList, followingList, this::handleFollowClick);
+        adapter = new UserAdapter(userList, followingList, this::handleFollowClick, user -> {
+            Intent intent = new Intent(Discover.this, Profile.class);
+            // Pass the exact document ID found in the database to ensure Profile loads the correct data
+            intent.putExtra("target_email", user.getEmail());
+            startActivity(intent);
+        });
         rvDiscover.setLayoutManager(new LinearLayoutManager(this));
         rvDiscover.setAdapter(adapter);
     }
 
     private void loadCurrentUserAndUsers() {
         FirebaseUser currentUserAuth = mAuth.getCurrentUser();
-        if (currentUserAuth == null || currentUserAuth.getEmail() == null) {
-            Toast.makeText(this, "Please log in again", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (currentUserAuth == null || currentUserAuth.getEmail() == null) return;
         
-        String currentEmail = currentUserAuth.getEmail();
+        String currentEmail = currentUserAuth.getEmail().toLowerCase().trim();
 
-        // 1. Get current user's profile to see who they already follow
         mDB.collection("Users").document(currentEmail)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     followingList.clear();
                     if (documentSnapshot.exists()) {
-                        try {
-                            UserModel user = documentSnapshot.toObject(UserModel.class);
-                            if (user != null && user.getFollowing() != null) {
-                                followingList.addAll(user.getFollowing());
-                            }
-                        } catch (Exception e) {
-                            Log.e("Discover", "Following list parse error", e);
-                            // Even if parsing fails, we continue to load other users
+                        UserModel user = documentSnapshot.toObject(UserModel.class);
+                        if (user != null && user.getFollowing() != null) {
+                            followingList.addAll(user.getFollowing());
                         }
+                    } else {
+                        Map<String, Object> newUser = new HashMap<>();
+                        newUser.put("email", currentEmail);
+                        newUser.put("uid", currentUserAuth.getUid());
+                        String username = currentUserAuth.getDisplayName();
+                        if (username == null || username.isEmpty()) {
+                            username = currentEmail.split("@")[0];
+                        }
+                        newUser.put("username", username);
+                        newUser.put("following", new ArrayList<String>());
+                        newUser.put("overallProgress", 0);
+                        mDB.collection("Users").document(currentEmail).set(newUser, SetOptions.merge());
                     }
                     fetchAllUsers(currentEmail);
                 })
-                .addOnFailureListener(e -> {
-                    Log.e("Discover", "Failed to load profile", e);
-                    fetchAllUsers(currentEmail);
-                });
+                .addOnFailureListener(e -> fetchAllUsers(currentEmail));
     }
 
     private void fetchAllUsers(String currentEmail) {
         mDB.collection("Users")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    userList.clear();
+                    // Use a Map to consolidate users by normalized email
+                    Map<String, UserModel> consolidatedUsers = new LinkedHashMap<>();
+                    
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         try {
                             UserModel user = doc.toObject(UserModel.class);
-                            // Safety: Only add valid users who are NOT the current user
-                            if (user != null && user.getEmail() != null && !user.getEmail().equalsIgnoreCase(currentEmail)) {
-                                userList.add(user);
+                            if (user != null) {
+                                String docId = doc.getId();
+                                String normalizedEmail = docId.toLowerCase().trim();
+                                
+                                // Sync the model's email field with the actual database document ID
+                                user.setEmail(docId);
+                                
+                                // Skip current user
+                                if (normalizedEmail.equals(currentEmail)) continue;
+
+                                if (consolidatedUsers.containsKey(normalizedEmail)) {
+                                    UserModel existing = consolidatedUsers.get(normalizedEmail);
+                                    
+                                    boolean existingHasImage = existing.getProfileImageBase64() != null && !existing.getProfileImageBase64().isEmpty();
+                                    boolean currentHasImage = user.getProfileImageBase64() != null && !user.getProfileImageBase64().isEmpty();
+                                    
+                                    // Preference logic to pick the document with the most complete info
+                                    if (!existingHasImage && currentHasImage) {
+                                        consolidatedUsers.put(normalizedEmail, user);
+                                    } else if (existingHasImage && currentHasImage) {
+                                        // If both have images, prefer the lowercase doc ID as it's the standard
+                                        if (docId.equals(normalizedEmail)) {
+                                            consolidatedUsers.put(normalizedEmail, user);
+                                        }
+                                    }
+                                } else {
+                                    consolidatedUsers.put(normalizedEmail, user);
+                                }
                             }
                         } catch (Exception e) {
-                            Log.e("Discover", "User parse error for ID: " + doc.getId(), e);
+                            Log.e("Discover", "Error parsing user: " + doc.getId());
                         }
                     }
-                    if (adapter != null) {
-                        adapter.notifyDataSetChanged();
-                    }
+                    
+                    userList.clear();
+                    userList.addAll(consolidatedUsers.values());
+                    
+                    if (adapter != null) adapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("Discover", "Error fetching users", e);
-                    Toast.makeText(this, "Failed to load community", Toast.LENGTH_SHORT).show();
+                    Log.e("Discover", "Failed to fetch users", e);
+                    Toast.makeText(this, "Could not load users", Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void handleFollowClick(UserModel targetUser, boolean isCurrentlyFollowing) {
         FirebaseUser currentUserAuth = mAuth.getCurrentUser();
-        if (currentUserAuth == null || targetUser.getUid() == null) return;
+        if (currentUserAuth == null || currentUserAuth.getEmail() == null || targetUser.getUid() == null) return;
         
-        String currentEmail = currentUserAuth.getEmail();
-        if (currentEmail == null) return;
+        String currentEmail = currentUserAuth.getEmail().toLowerCase().trim();
 
         if (isCurrentlyFollowing) {
             mDB.collection("Users").document(currentEmail)
@@ -140,8 +179,7 @@ public class Discover extends AppCompatActivity {
                     .addOnSuccessListener(aVoid -> {
                         followingList.remove(targetUser.getUid());
                         if (adapter != null) adapter.notifyDataSetChanged();
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(this, "Action failed", Toast.LENGTH_SHORT).show());
+                    });
         } else {
             mDB.collection("Users").document(currentEmail)
                     .update("following", FieldValue.arrayUnion(targetUser.getUid()))
@@ -149,7 +187,12 @@ public class Discover extends AppCompatActivity {
                         followingList.add(targetUser.getUid());
                         if (adapter != null) adapter.notifyDataSetChanged();
                     })
-                    .addOnFailureListener(e -> Toast.makeText(this, "Action failed", Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> {
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("following", followingList);
+                        followingList.add(targetUser.getUid());
+                        mDB.collection("Users").document(currentEmail).set(data, SetOptions.merge());
+                    });
         }
     }
 }

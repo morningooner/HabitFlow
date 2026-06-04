@@ -8,6 +8,8 @@ public class UserModel {
     private String email = "";
     private String uid = "";
     private List<String> following = new ArrayList<>();
+    private int overallProgress = 0;
+    private String profileImageBase64 = "";
 
     public UserModel() {
         // Required for Firestore
@@ -18,6 +20,8 @@ public class UserModel {
         this.email = email != null ? email : "";
         this.uid = uid != null ? uid : "";
         this.following = new ArrayList<>();
+        this.overallProgress = 0;
+        this.profileImageBase64 = "";
     }
 
     public String getUsername() { return username; }
@@ -35,4 +39,10 @@ public class UserModel {
     public void setFollowing(List<String> following) { 
         this.following = following != null ? following : new ArrayList<>(); 
     }
+
+    public int getOverallProgress() { return overallProgress; }
+    public void setOverallProgress(int overallProgress) { this.overallProgress = overallProgress; }
+
+    public String getProfileImageBase64() { return profileImageBase64; }
+    public void setProfileImageBase64(String profileImageBase64) { this.profileImageBase64 = profileImageBase64; }
 }

@@ -1,5 +1,8 @@
 package com.example.habitflows;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,15 +21,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     private List<UserModel> userList;
     private List<String> followingList;
     private OnFollowClickListener followListener;
+    private OnUserClickListener userClickListener;
 
     public interface OnFollowClickListener {
         void onFollowClick(UserModel user, boolean isFollowing);
     }
 
-    public UserAdapter(List<UserModel> userList, List<String> followingList, OnFollowClickListener followListener) {
+    public interface OnUserClickListener {
+        void onUserClick(UserModel user);
+    }
+
+    public UserAdapter(List<UserModel> userList, List<String> followingList, 
+                       OnFollowClickListener followListener, OnUserClickListener userClickListener) {
         this.userList = userList;
         this.followingList = followingList;
         this.followListener = followListener;
+        this.userClickListener = userClickListener;
     }
 
     @NonNull
@@ -41,35 +51,38 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         UserModel user = userList.get(position);
         if (user == null) return;
 
-        // Clean username: Remove @gmail.com or any email domain if present
+        // Set username
         String rawUsername = user.getUsername();
-        String cleanUsername = "Unknown User";
-        
-        if (rawUsername != null && !rawUsername.isEmpty()) {
-            if (rawUsername.contains("@")) {
-                cleanUsername = rawUsername.split("@")[0];
-            } else {
-                cleanUsername = rawUsername;
-            }
-        }
-        
+        String cleanUsername = (rawUsername != null && rawUsername.contains("@")) 
+                ? rawUsername.split("@")[0] : (rawUsername != null ? rawUsername : "Unknown User");
         holder.tvUsername.setText(cleanUsername);
 
-        // Null safety for following check
-        boolean isFollowing = user.getUid() != null && followingList != null && followingList.contains(user.getUid());
-        
-        if (isFollowing) {
-            holder.btnFollow.setText("Following");
-            holder.btnFollow.setAlpha(0.6f);
+        // Set profile image from Base64
+        String encodedImage = user.getProfileImageBase64();
+        if (encodedImage != null && !encodedImage.isEmpty()) {
+            try {
+                byte[] decodedByte = Base64.decode(encodedImage, Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+                holder.ivAvatar.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                holder.ivAvatar.setImageResource(R.drawable.profilepic);
+            }
         } else {
-            holder.btnFollow.setText("Follow");
-            holder.btnFollow.setAlpha(1.0f);
+            holder.ivAvatar.setImageResource(R.drawable.profilepic);
         }
 
+        // Follow button logic
+        boolean isFollowing = user.getUid() != null && followingList != null && followingList.contains(user.getUid());
+        holder.btnFollow.setText(isFollowing ? "Following" : "Follow");
+        holder.btnFollow.setAlpha(isFollowing ? 0.6f : 1.0f);
+
         holder.btnFollow.setOnClickListener(v -> {
-            if (followListener != null && user.getUid() != null) {
-                followListener.onFollowClick(user, isFollowing);
-            }
+            if (followListener != null) followListener.onFollowClick(user, isFollowing);
+        });
+
+        // Navigate to profile on item click
+        holder.itemView.setOnClickListener(v -> {
+            if (userClickListener != null) userClickListener.onUserClick(user);
         });
     }
 

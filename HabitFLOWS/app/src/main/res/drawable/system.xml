@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="400dp"
+    android:viewportWidth="400"
+    android:viewportHeight="400">
+
+    <!-- Main Background (Denim) with angled corners -->
+    <path
+        android:fillAlpha="0.9"
+        android:fillColor="@color/background"
+        android:pathData="M40,20 L360,20 L380,40 L380,360 L360,380 L40,380 L20,360 L20,40 Z" />
+
+    <!-- Outer Border (Border Color) -->
+    <path
+        android:strokeColor="@color/border"
+        android:strokeWidth="1.5"
+        android:pathData="M40,20 L360,20 L380,40 L380,360 L360,380 L40,380 L20,360 L20,40 Z" />
+
+    <!-- Glowing Corner Accents (Baby Blue) -->
+    <path
+        android:strokeColor="@color/baby_blue"
+        android:strokeWidth="4"
+        android:strokeLineCap="butt"
+        android:pathData="M20,100 V40 L40,20 H100" />
+    <path
+        android:strokeColor="@color/baby_blue"
+        android:strokeWidth="4"
+        android:strokeLineCap="butt"
+        android:pathData="M300,20 H360 L380,40 V100" />
+    <path
+        android:strokeColor="@color/baby_blue"
+        android:strokeWidth="4"
+        android:strokeLineCap="butt"
+        android:pathData="M20,300 V360 L40,380 H100" />
+    <path
+        android:strokeColor="@color/baby_blue"
+        android:strokeWidth="4"
+        android:strokeLineCap="butt"
+        android:pathData="M300,380 H360 L380,360 V300" />
+
+</vector>

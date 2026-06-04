@@ -19,19 +19,25 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpMenu extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    private FirebaseFirestore mDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_menu);
 
-        // Initialize Firebase Auth
+        // Initialize Firebase
         mAuth = FirebaseAuth.getInstance();
-        //userAuth = FirebaseAuth.getInstance().getCurrentUser();
+        mDB = FirebaseFirestore.getInstance();
 
         TextView login = (TextView) findViewById(R.id.logInLinkBtn);
         EditText uname = (EditText) findViewById(R.id.signUpUsername);
@@ -82,25 +88,37 @@ public class SignUpMenu extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    // Sign up success, update UI with the signed-in user's information
                                     FirebaseUser user = mAuth.getCurrentUser();
 
-                                    // If user don't exist yet
                                     if (user != null) {
-                                        // Store username in Firebase Profile
+                                        // 1. Update Firebase Auth Profile
                                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                                 .setDisplayName(username)
                                                 .build();
 
-                                        user.updateProfile(profileUpdates).addOnCompleteListener(updateTask -> {
-                                            Toast.makeText(SignUpMenu.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(SignUpMenu.this, LoginMenu.class);
-                                            startActivity(intent);
-                                            finish();
-                                        });
+                                        user.updateProfile(profileUpdates);
+
+                                        // 2. Create User Document in Firestore
+                                        Map<String, Object> userData = new HashMap<>();
+                                        userData.put("username", username);
+                                        userData.put("email", email);
+                                        userData.put("uid", user.getUid());
+                                        userData.put("following", new ArrayList<String>());
+                                        userData.put("overallProgress", 0);
+
+                                        mDB.collection("Users").document(email)
+                                                .set(userData)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    Toast.makeText(SignUpMenu.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(SignUpMenu.this, LoginMenu.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(SignUpMenu.this, "Database error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                });
                                     }
                                 } else {
-                                    // Show Firebase error
                                     String errorMessage = task.getException() != null ? task.getException().getMessage() : "Registration failed";
                                     Toast.makeText(SignUpMenu.this, "Error: " + errorMessage, Toast.LENGTH_LONG).show();
                                 }

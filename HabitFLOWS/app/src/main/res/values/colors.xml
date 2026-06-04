@@ -10,4 +10,8 @@
     <color name="background_black">#121212</color>
     <color name="surface_dark">#1E1E1E</color>
     <color name="whiteText">#FFFFFF</color>
+    <color name="denim">#131E3A</color>
+    <color name="background">#0D1117</color>
+    <color name="baby_blue">#89CFEF</color>
+    <color name="border">#3B82F6</color>
 </resources>
