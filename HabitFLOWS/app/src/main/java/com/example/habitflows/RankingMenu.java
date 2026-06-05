@@ -8,7 +8,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class RankingMenu extends AppCompatActivity {
+
+    private FirebaseFirestore mDB;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,8 +22,11 @@ public class RankingMenu extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_ranking_menu);
 
+        // Initialize Firebase
+        mAuth = FirebaseAuth.getInstance();
+        mDB = FirebaseFirestore.getInstance();
 
-
+        // Handle Layout Padding
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

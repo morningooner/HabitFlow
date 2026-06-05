@@ -9,6 +9,7 @@ public class UserModel {
     private String uid = "";
     private List<String> following = new ArrayList<>();
     private int overallProgress = 0;
+    private int xp = 0;
     private String profileImageBase64 = "";
 
     public UserModel() {
@@ -21,6 +22,7 @@ public class UserModel {
         this.uid = uid != null ? uid : "";
         this.following = new ArrayList<>();
         this.overallProgress = 0;
+        this.xp = 0;
         this.profileImageBase64 = "";
     }
 
@@ -43,6 +45,9 @@ public class UserModel {
     public int getOverallProgress() { return overallProgress; }
     public void setOverallProgress(int overallProgress) { this.overallProgress = overallProgress; }
 
+    public int getXp() { return xp; }
+    public void setXp(int xp) { this.xp = xp; }
+
     public String getProfileImageBase64() { return profileImageBase64; }
-    public void setProfileImageBase64(String profileImageBase64) { this.profileImageBase64 = profileImageBase64; }
+    public void setProfileImageBase64(String profileImageBase64) { this.profileImageBase64 = profileImageBase64 != null ? profileImageBase64 : ""; }
 }

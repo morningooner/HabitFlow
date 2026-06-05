@@ -105,6 +105,8 @@ public class SignUpMenu extends AppCompatActivity {
                                         userData.put("uid", user.getUid());
                                         userData.put("following", new ArrayList<String>());
                                         userData.put("overallProgress", 0);
+                                        userData.put("xp", 0); // INITIALIZE XP
+                                        userData.put("profileImageBase64", "");
 
                                         mDB.collection("Users").document(email)
                                                 .set(userData)

@@ -211,14 +211,21 @@ public class playHabit extends AppCompatActivity {
 
         if (mAuth.getCurrentUser() == null) return;
 
-        mDB.collection("Users").document(mAuth.getCurrentUser().getEmail())
+        String userEmail = mAuth.getCurrentUser().getEmail();
+
+        // 1. Update the habit's completedDays
+        mDB.collection("Users").document(userEmail)
                 .collection("Habits").document(habitName)
-                .update("completedDays", FieldValue.increment(1))
+                .update("completedDays", FieldValue.increment(1));
+
+        // 2. Award +10 XP to the user
+        mDB.collection("Users").document(userEmail)
+                .update("xp", FieldValue.increment(10))
                 .addOnSuccessListener(aVoid -> {
-                    Log.d("PlayHabit", "Progress recorded for: " + habitName);
-                    Toast.makeText(this, "Session complete! Progress saved for " + habitName, Toast.LENGTH_LONG).show();
+                    Log.d("PlayHabit", "Progress and +10 XP recorded for: " + habitName);
+                    Toast.makeText(this, "Session complete! +10 XP earned.", Toast.LENGTH_LONG).show();
                 })
-                .addOnFailureListener(e -> Log.e("PlayHabit", "Error updating progress", e));
+                .addOnFailureListener(e -> Log.e("PlayHabit", "Error updating progress/XP", e));
     }
 
     private void updateCountDownText() {

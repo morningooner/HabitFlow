@@ -63,6 +63,6 @@ public class MainMenu extends AppCompatActivity {
 
         btnDiscover.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, Discover.class)));
 
-        btnRankHabit.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, RankingMenu.class)));
+        btnRankHabit.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, LeaderboardMenu.class)));
     }
 }

@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Choose Habit"
-        android:textColor="@color/whiteText"
+        android:textColor="@color/background_black"
         app:cornerRadius="12dp"
         app:icon="@android:drawable/ic_menu_agenda"
         app:layout_constraintEnd_toEndOf="parent"
