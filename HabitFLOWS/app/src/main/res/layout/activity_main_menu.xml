@@ -223,6 +223,7 @@
                     app:iconSize="32dp"
                     app:iconTint="#10B981" />
             </com.google.android.material.card.MaterialCardView>
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="120dp"
@@ -235,7 +236,7 @@
                 app:strokeWidth="1dp">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnRankHabit"
+                    android:id="@+id/btnLeaderboard"
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -248,6 +249,33 @@
                     app:iconPadding="10dp"
                     app:iconSize="32dp"
                     app:iconTint="#F59E0B" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_margin="8dp"
+                android:layout_columnWeight="1"
+                app:cardBackgroundColor="#0AFFFFFF"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#12FFFFFF"
+                app:strokeWidth="1dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRankMenu"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="16dp"
+                    android:text="Rank"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    app:icon="@drawable/outline_cyclone_24"
+                    app:iconGravity="top"
+                    app:iconPadding="10dp"
+                    app:iconSize="32dp"
+                    app:iconTint="#0B3EF5" />
             </com.google.android.material.card.MaterialCardView>
         </GridLayout>
     </ScrollView>

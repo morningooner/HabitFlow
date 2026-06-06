@@ -1,6 +1,8 @@
 package com.example.habitflows;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +14,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RankingMenu extends AppCompatActivity {
+
+    private ImageView btnRankingBack;
 
     private FirebaseFirestore mDB;
     private FirebaseAuth mAuth;
@@ -26,11 +30,17 @@ public class RankingMenu extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDB = FirebaseFirestore.getInstance();
 
+        // Initialize Views
+        btnRankingBack = findViewById(R.id.btnRankingBack);
+
         // Handle Layout Padding
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        btnRankingBack.setOnClickListener(v -> startActivity(new Intent(RankingMenu.this, MainMenu.class)));
+
     }
 }

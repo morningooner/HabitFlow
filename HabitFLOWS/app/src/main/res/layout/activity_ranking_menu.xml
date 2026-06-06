@@ -5,15 +5,163 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/denim"
     tools:context=".RankingMenu">
 
+    <!-- Header Title (Matches Login Menu Style) -->
     <TextView
+        android:id="@+id/tvRankingHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="32dp"
+        android:letterSpacing="0.2"
+        android:shadowColor="@color/border"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="15"
+        android:text="RANK STATUS"
+        android:textColor="@color/baby_blue"
+        android:textSize="32sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/btnRankingBack"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/outline_arrow_back_24"
+        app:layout_constraintBottom_toBottomOf="@id/tvRankingHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvRankingHeader"
+        app:tint="@color/baby_blue" />
+
+    <!-- Main System Container -->
+    <LinearLayout
+        android:id="@+id/rankContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/system"
+        android:orientation="vertical"
+        android:padding="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvRankingHeader">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- User Rank Visualization: Crown + Rank Letter -->
+            <FrameLayout
+                android:id="@+id/flRankIcon"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/ivMainRankBadge"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/outline_crown_24"
+                    app:tint="@color/baby_blue" />
+
+                <TextView
+                    android:id="@+id/tvRankInitial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:text="F"
+                    android:textColor="@color/baby_blue"
+                    android:textSize="56sp"
+                    android:textStyle="bold" />
+
+                <!-- Star indicator (Visible for E-Class and above) -->
+                <ImageView
+                    android:id="@+id/ivRankStarDecor"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:src="@android:drawable/btn_star_big_on"
+                    android:visibility="gone"
+                    app:tint="@color/baby_blue"
+                    tools:visibility="visible" />
+            </FrameLayout>
+
+            <!-- Current User Details -->
+            <TextView
+                android:id="@+id/tvUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="PLAYER NAME"
+                android:textColor="@color/white"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/flRankIcon" />
+
+            <TextView
+                android:id="@+id/tvUserRankClass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="F-CLASS"
+                android:textColor="@color/baby_blue"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvUsername" />
+
+            <!-- Experience Progress -->
+            <TextView
+                android:id="@+id/tvXpLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:text="XP TO NEXT RANK:"
+                android:textColor="#888888"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvUserRankClass" />
+
+            <TextView
+                android:id="@+id/tvXpProgressText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="150 XP"
+                android:textColor="@color/baby_blue"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvXpLabel" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/xpProgressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:progress="25"
+                app:indicatorColor="@color/baby_blue"
+                app:layout_constraintTop_toBottomOf="@id/tvXpLabel"
+                app:trackColor="#1AFFFFFF"
+                app:trackCornerRadius="4dp"
+                app:trackThickness="12dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainMenu extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    private Button btnProfile, btnHabit, btnStatistics, btnPlayHabit, btnRankHabit, btnDiscover;
+    private Button btnProfile, btnHabit, btnStatistics, btnPlayHabit, btnLeaderboard, btnDiscover, btnRankMenu;
     private TextView mainMenuHomeTV4;
 
     @Override
@@ -33,8 +33,9 @@ public class MainMenu extends AppCompatActivity {
         btnHabit = findViewById(R.id.btnHabit);
         btnStatistics = findViewById(R.id.btnStatistics);
         btnPlayHabit = findViewById(R.id.btnPlayHabit);
-        btnRankHabit = findViewById(R.id.btnRankHabit);
+        btnLeaderboard = findViewById(R.id.btnLeaderboard);
         btnDiscover = findViewById(R.id.btnDiscover);
+        btnRankMenu = findViewById(R.id.btnRankMenu);
 
         if (mAuth.getCurrentUser() != null) {
             String name = mAuth.getCurrentUser().getDisplayName();
@@ -63,6 +64,8 @@ public class MainMenu extends AppCompatActivity {
 
         btnDiscover.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, Discover.class)));
 
-        btnRankHabit.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, LeaderboardMenu.class)));
+        btnLeaderboard.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, LeaderboardMenu.class)));
+
+        btnRankMenu.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, RankingMenu.class)));
     }
 }

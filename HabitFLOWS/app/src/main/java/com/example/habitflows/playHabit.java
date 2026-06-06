@@ -220,7 +220,7 @@ public class playHabit extends AppCompatActivity {
 
         // 2. Award +10 XP to the user
         mDB.collection("Users").document(userEmail)
-                .update("xp", FieldValue.increment(10))
+                .update("xp", FieldValue.increment(90))
                 .addOnSuccessListener(aVoid -> {
                     Log.d("PlayHabit", "Progress and +10 XP recorded for: " + habitName);
                     Toast.makeText(this, "Session complete! +10 XP earned.", Toast.LENGTH_LONG).show();
