@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:letterSpacing="0.1"
-            android:text="LVL : 3"
+            android:text="LVL : 1"
             android:textColor="#A78BFA"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -117,7 +117,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Scrollable Content -->
-            <ScrollView
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:clipToPadding="false"
@@ -249,7 +249,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="POSTS"
+                                android:text="HABITS"
                                 android:textColor="#60A5FA"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
@@ -273,15 +273,15 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <LinearLayout
-                        android:id="@+id/llHabitsList"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvProfileHabits"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:orientation="vertical" />
+                        android:nestedScrollingEnabled="false" />
 
                 </LinearLayout>
-            </ScrollView>
+            </androidx.core.widget.NestedScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

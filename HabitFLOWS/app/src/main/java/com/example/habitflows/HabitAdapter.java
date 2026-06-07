@@ -46,7 +46,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         holder.tvHabitName.setText(habit.getHabitName());
         holder.tvHabitDuration.setText(habit.getDuration() + " Days Goal");
 
-        // FIXED: Calculate progress based on completedDays from the timer sessions
+        // Calculate progress based on completedDays from the timer sessions
         int completed = habit.getCompletedDays();
         int total = habit.getDuration();
         
@@ -56,17 +56,20 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         holder.habitProgressIndicator.setProgress(percentage);
         holder.tvHabitPercentage.setText(percentage + "%");
 
-        holder.btnDeleteHabit.setOnClickListener(v -> {
-            if (deleteListener != null) {
-                deleteListener.onDelete(habit);
-            }
-        });
+        // Hide Edit/Delete if no listeners provided (e.g., in Profile view)
+        if (deleteListener == null) {
+            holder.btnDeleteHabit.setVisibility(View.GONE);
+        } else {
+            holder.btnDeleteHabit.setVisibility(View.VISIBLE);
+            holder.btnDeleteHabit.setOnClickListener(v -> deleteListener.onDelete(habit));
+        }
 
-        holder.btnEditHabit.setOnClickListener(v -> {
-            if (editListener != null) {
-                editListener.onEdit(habit);
-            }
-        });
+        if (editListener == null) {
+            holder.btnEditHabit.setVisibility(View.GONE);
+        } else {
+            holder.btnEditHabit.setVisibility(View.VISIBLE);
+            holder.btnEditHabit.setOnClickListener(v -> editListener.onEdit(habit));
+        }
     }
 
     @Override

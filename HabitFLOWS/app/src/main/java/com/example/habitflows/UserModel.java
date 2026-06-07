@@ -10,6 +10,7 @@ public class UserModel {
     private List<String> following = new ArrayList<>();
     private int overallProgress = 0;
     private int xp = 0;
+    private String rank = "F";
     private String profileImageBase64 = "";
 
     public UserModel() {
@@ -23,6 +24,7 @@ public class UserModel {
         this.following = new ArrayList<>();
         this.overallProgress = 0;
         this.xp = 0;
+        this.rank = "F";
         this.profileImageBase64 = "";
     }
 
@@ -47,6 +49,9 @@ public class UserModel {
 
     public int getXp() { return xp; }
     public void setXp(int xp) { this.xp = xp; }
+
+    public String getRank() { return rank; }
+    public void setRank(String rank) { this.rank = rank != null ? rank : "F"; }
 
     public String getProfileImageBase64() { return profileImageBase64; }
     public void setProfileImageBase64(String profileImageBase64) { this.profileImageBase64 = profileImageBase64 != null ? profileImageBase64 : ""; }

@@ -5,292 +5,294 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0A0F"
+    android:background="@color/denim"
     tools:context=".MainMenu">
 
-    <!-- Top Header -->
-    <View
-        android:id="@+id/viewHeader"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:background="#1E1B4B"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!-- App Title (Solo Leveling System Style) -->
 
+    <!-- TITLE -->
     <TextView
         android:id="@+id/mainMenuHomeTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="16dp"
+        android:letterSpacing="0.2"
+        android:shadowColor="@color/border"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="15"
         android:text="HabitFLOW"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
+        android:textColor="@color/baby_blue"
+        android:textSize="42sp"
         android:textStyle="bold"
-        android:letterSpacing="0.1"
+        android:layout_gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Profile Greeting Section -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/greetingCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="-30dp"
-        app:cardBackgroundColor="#111827"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="0dp"
-        app:strokeColor="#1F2937"
-        app:strokeWidth="1dp"
-        app:layout_constraintTop_toBottomOf="@id/viewHeader">
+    <!-- System Interface Container-->
+    <LinearLayout
+        android:id="@+id/systemContainer"
+        android:layout_width="379dp"
+        android:layout_height="700dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/system"
+        android:orientation="vertical"
+        android:padding="48dp"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/mainMenuLogoutBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mainMenuHomeTV"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintWidth_max="550dp">
 
+        <!-- System Header (Quest Directions style) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_dialog_info"
+                app:tint="@color/baby_blue" />
 
             <TextView
-                android:id="@+id/mainMenuHomeTV3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Welcome back,"
-                android:textColor="#9CA3AF"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/mainMenuHomeTV4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Homer Simpson"
-                android:textColor="#FFFFFF"
-                android:textSize="22sp"
+                android:layout_marginStart="8dp"
+                android:letterSpacing="0.1"
+                android:text="SYSTEM INTERFACE"
+                android:textColor="@color/baby_blue"
+                android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:clipToPadding="false"
-        android:paddingBottom="100dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/greetingCard">
-
-        <GridLayout
+        <View
             android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="#3389CFEF" />
+
+        <!-- Player Identity Section -->
+        <TextView
+            android:id="@+id/mainMenuHomeTV3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:columnCount="2">
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:letterSpacing="0.1"
+            android:shadowColor="@color/border"
+            android:shadowRadius="10"
+            android:text="PLAYER IDENTITY:"
+            android:textColor="@color/baby_blue"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
-            <!-- My Habits Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="10dp"
-                android:layout_height="120dp"
-                android:layout_margin="8dp"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="#0AFFFFFF"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#12FFFFFF"
-                app:strokeWidth="1dp">
+        <TextView
+            android:id="@+id/mainMenuHomeTV4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:text="HOMER SIMPSON"
+            android:textColor="@color/white"
+            android:textSize="32sp"
+            android:textStyle="bold" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:alpha="0.8"
+            android:text="SYSTEM STATUS: ONLINE"
+            android:textColor="@color/baby_blue"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:letterSpacing="0.1"
+            android:text="What would you like to do today?"
+            android:textColor="@color/baby_blue"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <!-- Navigation Grid Scroll -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:scrollbarSize="0dp">
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:useDefaultMargins="true">
+
+                <!-- Habits Action -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnHabit"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="16dp"
-                    android:text="Habits"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_columnWeight="1"
+                    android:text="HABITS"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:cornerRadius="4dp"
                     app:icon="@android:drawable/ic_menu_today"
                     app:iconGravity="top"
-                    app:iconPadding="10dp"
                     app:iconSize="32dp"
-                    app:iconTint="#A78BFA" />
-            </com.google.android.material.card.MaterialCardView>
+                    app:iconTint="@color/purple_200"
+                    app:strokeColor="@color/baby_blue" />
 
-            <!-- Profile Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="8dp"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="#0AFFFFFF"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#12FFFFFF"
-                app:strokeWidth="1dp">
-
+                <!-- Profile Action -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/Profile"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="16dp"
-                    android:text="Profile"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_columnWeight="1"
+                    android:text="PROFILE"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:cornerRadius="4dp"
                     app:icon="@android:drawable/ic_menu_myplaces"
                     app:iconGravity="top"
-                    app:iconPadding="10dp"
                     app:iconSize="32dp"
-                    app:iconTint="#A78BFA" />
-            </com.google.android.material.card.MaterialCardView>
+                    app:iconTint="#FFFFFF"
+                    app:strokeColor="@color/baby_blue" />
 
-            <!-- Statistics Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="8dp"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="#0AFFFFFF"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#12FFFFFF"
-                app:strokeWidth="1dp">
-
+                <!-- Stats Action -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnStatistics"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="16dp"
-                    android:text="Stats"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_columnWeight="1"
+                    android:text="STATS"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:cornerRadius="4dp"
                     app:icon="@android:drawable/ic_menu_sort_by_size"
                     app:iconGravity="top"
-                    app:iconPadding="10dp"
                     app:iconSize="32dp"
-                    app:iconTint="#A78BFA" />
-            </com.google.android.material.card.MaterialCardView>
+                    app:iconTint="#E02D03"
+                    app:strokeColor="@color/baby_blue" />
 
-            <!-- Play Habit Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="8dp"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="#0AFFFFFF"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#12FFFFFF"
-                app:strokeWidth="1dp">
-
+                <!-- Play Session Action -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnPlayHabit"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="16dp"
-                    android:text="Play Session"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_columnWeight="1"
+                    android:text="PLAY"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:cornerRadius="4dp"
                     app:icon="@drawable/outline_autoplay_24"
                     app:iconGravity="top"
-                    app:iconPadding="10dp"
                     app:iconSize="32dp"
-                    app:iconTint="#A78BFA" />
-            </com.google.android.material.card.MaterialCardView>
+                    app:iconTint="#1EE707"
+                    app:strokeColor="@color/baby_blue" />
 
-            <!-- Discover Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="8dp"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="#0AFFFFFF"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#12FFFFFF"
-                app:strokeWidth="1dp">
-
+                <!-- Discover Action -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDiscover"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="16dp"
-                    android:text="Discover"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_columnWeight="1"
+                    android:text="DISCOVER"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:cornerRadius="4dp"
                     app:icon="@android:drawable/ic_menu_search"
                     app:iconGravity="top"
-                    app:iconPadding="10dp"
                     app:iconSize="32dp"
-                    app:iconTint="#10B981" />
-            </com.google.android.material.card.MaterialCardView>
+                    app:iconTint="#0363FF"
+                    app:strokeColor="@color/baby_blue" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="8dp"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="#0AFFFFFF"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#12FFFFFF"
-                app:strokeWidth="1dp">
-
+                <!-- Leaderboard Action -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnLeaderboard"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="16dp"
-                    android:text="Leaderboard"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_columnWeight="1"
+                    android:text="LEADERS"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:cornerRadius="4dp"
                     app:icon="@drawable/outline_crown_24"
                     app:iconGravity="top"
-                    app:iconPadding="10dp"
                     app:iconSize="32dp"
-                    app:iconTint="#F59E0B" />
-            </com.google.android.material.card.MaterialCardView>
+                    app:iconTint="#FFEB3B"
+                    app:strokeColor="@color/baby_blue" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="120dp"
-                android:layout_margin="8dp"
-                android:layout_columnWeight="1"
-                app:cardBackgroundColor="#0AFFFFFF"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#12FFFFFF"
-                app:strokeWidth="1dp">
-
+                <!-- Rank Status Action -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRankMenu"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="16dp"
-                    android:text="Rank"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_columnWeight="1"
+                    android:text="RANK"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:cornerRadius="4dp"
                     app:icon="@drawable/outline_cyclone_24"
                     app:iconGravity="top"
-                    app:iconPadding="10dp"
                     app:iconSize="32dp"
-                    app:iconTint="#0B3EF5" />
-            </com.google.android.material.card.MaterialCardView>
-        </GridLayout>
-    </ScrollView>
+                    app:iconTint="#FF8102"
+                    app:strokeColor="@color/baby_blue" />
 
-    <!-- Logout Button -->
+            </GridLayout>
+        </ScrollView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:alpha="0.5"
+            android:text="[ SYSTEM OVERRIDE ACTIVE ]"
+            android:textColor="@color/baby_blue"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/mainMenuLogoutBtn"
         style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="Logout"
+        android:layout_marginBottom="30dp"
+        android:letterSpacing="0.1"
+        android:text="[ DISCONNECT_SYSTEM ]"
         android:textColor="#EF4444"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/systemContainer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
