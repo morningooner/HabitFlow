@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HabitFLOWS">
         <activity
+            android:name=".Inbox"
+            android:exported="false" />
+        <activity
             android:name=".LeaderboardMenu"
             android:exported="false" />
         <activity

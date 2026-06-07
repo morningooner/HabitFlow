@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,7 +31,6 @@ import com.google.firebase.firestore.SetOptions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,9 +40,7 @@ public class Profile extends AppCompatActivity {
     private ImageView ivProfile;
     private TextView tvName, tvDescription, tvFollowingCount, tvFollowerCount, tvPostCount, tvLevelDisplay, tvUserHeaderName;
     private MaterialButton btnFollow;
-    private RecyclerView rvProfileHabits;
-    private HabitAdapter adapter;
-    private List<HabitModel> habitList;
+    private LinearLayout llHabitsList;
     
     private FirebaseAuth mAuth;
     private FirebaseFirestore mDB;
@@ -103,15 +100,8 @@ public class Profile extends AppCompatActivity {
         tvLevelDisplay = findViewById(R.id.tvLevelDisplay);
         tvUserHeaderName = findViewById(R.id.tvUserHeaderName);
         btnFollow = findViewById(R.id.btnFollow);
-        rvProfileHabits = findViewById(R.id.rvProfileHabits);
+        llHabitsList = findViewById(R.id.llHabitsList);
         ImageView ivBack = findViewById(R.id.ivBack);
-
-        // Setup RecyclerView
-        habitList = new ArrayList<>();
-        // Passing null for listeners hides Edit/Delete buttons in the adapter
-        adapter = new HabitAdapter(habitList, null, null);
-        rvProfileHabits.setLayoutManager(new LinearLayoutManager(this));
-        rvProfileHabits.setAdapter(adapter);
 
         if (isOwnProfile) {
             btnFollow.setText("EDIT BIO");
@@ -142,7 +132,7 @@ public class Profile extends AppCompatActivity {
                 UserModel user = doc.toObject(UserModel.class);
                 if (user != null) {
                     tvName.setText(user.getUsername());
-                    tvLevelDisplay.setText("LVL : " + (user.getXp() / 100 + 1));
+                    tvLevelDisplay.setText("LVL : " + (user.getOverallProgress() / 10 + 1));
                     
                     String encodedImage = user.getProfileImageBase64();
                     if (encodedImage != null && !encodedImage.isEmpty()) {
@@ -165,18 +155,44 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        // Load Habits using RecyclerView
+        // Load Habits
         mDB.collection("Users").document(targetEmail).collection("Habits").get().addOnSuccessListener(query -> {
-            habitList.clear();
+            llHabitsList.removeAllViews();
             tvPostCount.setText(String.valueOf(query.size()));
             for (DocumentSnapshot doc : query.getDocuments()) {
                 HabitModel habit = doc.toObject(HabitModel.class);
                 if (habit != null) {
-                    habitList.add(habit);
+                    addHabitToLayout(habit);
                 }
             }
-            adapter.notifyDataSetChanged();
         });
+    }
+
+    private void addHabitToLayout(HabitModel habit) {
+        View habitView = LayoutInflater.from(this).inflate(R.layout.item_habit, llHabitsList, false);
+        
+        TextView tvHabitName = habitView.findViewById(R.id.tvHabitName);
+        TextView tvDuration = habitView.findViewById(R.id.tvHabitDuration);
+        TextView tvPercentage = habitView.findViewById(R.id.tvHabitPercentage);
+        View btnEdit = habitView.findViewById(R.id.btnEditHabit);
+        View btnDelete = habitView.findViewById(R.id.btnDeleteHabit);
+
+        if (!isOwnProfile) {
+            btnEdit.setVisibility(View.GONE);
+            btnDelete.setVisibility(View.GONE);
+        }
+
+        tvHabitName.setText(habit.getHabitName());
+        tvDuration.setText(habit.getCompletedDays() + " / " + habit.getDuration() + " " + habit.getUnit());
+        
+        int progress = (int) ((habit.getCompletedDays() / (float) habit.getDuration()) * 100);
+        tvPercentage.setText(progress + "%");
+        
+        com.google.android.material.progressindicator.LinearProgressIndicator progressIndicator = 
+                habitView.findViewById(R.id.habitProgressIndicator);
+        progressIndicator.setProgress(progress);
+
+        llHabitsList.addView(habitView);
     }
 
     private void checkIfFollowing() {

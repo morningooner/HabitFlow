@@ -38,6 +38,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tvLevelDisplay">
 
+            <!-- Inbox Icon -->
+            <ImageView
+                android:id="@+id/ivInbox"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginEnd="16dp"
+                android:src="@android:drawable/ic_dialog_email"
+                android:visibility="gone"
+                app:tint="#A78BFA" />
+
             <TextView
                 android:id="@+id/tvUserHeaderName"
                 android:layout_width="wrap_content"
@@ -294,34 +304,6 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginHorizontal="12dp"
-            android:background="#1E1B4B"
-            android:padding="8dp"
-            android:src="@android:drawable/ic_menu_myplaces"
-            app:tint="#60A5FA" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginHorizontal="12dp"
-            android:background="#1E1B4B"
-            android:padding="8dp"
-            android:src="@android:drawable/ic_menu_today"
-            app:tint="#60A5FA" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginHorizontal="12dp"
-            android:background="#1E1B4B"
-            android:padding="8dp"
-            android:src="@android:drawable/ic_menu_sort_by_size"
-            app:tint="#60A5FA" />
-    </LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
