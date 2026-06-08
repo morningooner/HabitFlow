@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -62,6 +64,12 @@ public class Statistics extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDB = FirebaseFirestore.getInstance();
 
+        //Initialize Views for animation
+        ConstraintLayout levelDisplay = findViewById(R.id.topBar);
+        CardView statusWindow = findViewById(R.id.statusWindow);
+        LinearLayout bottomNav = findViewById(R.id.bottomIcons);
+
+
         // Bind Views
         btnBackStats = findViewById(R.id.btnBackStats);
         cpOverall = findViewById(R.id.cpOverall);
@@ -109,6 +117,9 @@ public class Statistics extends AppCompatActivity {
 
         loadUserProfile();
         loadHabitStatistics();
+
+        // Run the "Solo Leveling" System Entrance Animation
+        SystemEntranceAnim.applySystemEntranceAnimation(levelDisplay, statusWindow, bottomNav);
     }
 
     private void loadUserProfile() {
@@ -117,24 +128,25 @@ public class Statistics extends AppCompatActivity {
 
         mDB.collection("Users").document(email).get().addOnSuccessListener(doc -> {
             if (doc.exists()) {
-                String name = doc.getString("username");
-                Long progress = doc.getLong("overallProgress");
-                int progVal = (progress != null) ? progress.intValue() : 0;
+                UserModel user = doc.toObject(UserModel.class);
+                if (user != null) {
+                    String name = user.getUsername();
+                    int progVal = user.getOverallProgress();
+                    int xp = user.getXp();
+                    String rank = user.getRank();
 
-                if (tvRpgName != null) tvRpgName.setText("NAME: " + (name != null ? name.toUpperCase() : "USER"));
-                if (tvUserHeaderName != null) tvUserHeaderName.setText(name != null ? name.toUpperCase() : "USER");
-                
-                int level = (progVal / 20) + 1;
-                if (tvRpgLv != null) tvRpgLv.setText("LV: " + level);
-                if (tvLevelDisplay != null) tvLevelDisplay.setText("LVL : " + level);
+                    if (tvRpgName != null) tvRpgName.setText("NAME: " + (name != null ? name.toUpperCase() : "USER"));
+                    if (tvUserHeaderName != null) tvUserHeaderName.setText(name != null ? name.toUpperCase() : "USER");
+                    
+                    // Keep level logic same if needed, or follow xp. 
+                    // Let's keep it as was for now, but update the Rank letter.
+                    int level = (progVal / 20) + 1;
+                    if (tvRpgLv != null) tvRpgLv.setText("LV: " + level);
+                    if (tvLevelDisplay != null) tvLevelDisplay.setText("LVL : " + level);
 
-                String rank = "E";
-                if (progVal >= 90) rank = "S";
-                else if (progVal >= 75) rank = "A";
-                else if (progVal >= 50) rank = "B";
-                else if (progVal >= 30) rank = "C";
-                else if (progVal >= 15) rank = "D";
-                if (tvRankLetter != null) tvRankLetter.setText(rank);
+                    // Rank letter follows the rank field from database (which follows XP system)
+                    if (tvRankLetter != null) tvRankLetter.setText(rank);
+                }
             }
         });
     }

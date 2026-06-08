@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -27,7 +29,6 @@ public class LeaderboardMenu extends AppCompatActivity {
 
     private FirebaseFirestore mDB;
     private FirebaseAuth mAuth;
-
     private TextView tvUserRankClass, tvXpLabel, tvXpProgressText;
     private ImageView ivMainRankBadge, ivRankStarDecor;
     private RecyclerView rvRankedUsers;
@@ -42,6 +43,11 @@ public class LeaderboardMenu extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mDB = FirebaseFirestore.getInstance();
+
+        //Initialize Views
+        ConstraintLayout mainMenuHomeTV = findViewById(R.id.topBar);
+        CardView contentWindow = findViewById(R.id.contentWindow);
+        RecyclerView rankedUsers = findViewById(R.id.rvRankedUsers);
 
         // Initialize UI
         ImageView btnRankingBack = findViewById(R.id.btnRankingBack);
@@ -68,6 +74,9 @@ public class LeaderboardMenu extends AppCompatActivity {
 
         loadRankings();
         loadCurrentUserRank();
+
+        // Run the "Solo Leveling" System Entrance Animation
+        SystemEntranceAnim.applySystemEntranceAnimation(mainMenuHomeTV, contentWindow, rankedUsers);
     }
 
     private void loadCurrentUserRank() {

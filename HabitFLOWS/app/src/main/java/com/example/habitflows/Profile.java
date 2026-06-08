@@ -17,11 +17,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
+import com.google.api.Distribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -66,6 +69,10 @@ public class Profile extends AppCompatActivity {
         mDB = FirebaseFirestore.getInstance();
         currentUser = mAuth.getCurrentUser();
 
+        ConstraintLayout topBar = findViewById(R.id.topBar);
+        MaterialCardView profileWindow = findViewById(R.id.profileWindow);
+        LinearLayout bottomIcons = findViewById(R.id.bottomIcons);
+
         // Get target email and normalize it
         String rawTarget = getIntent().getStringExtra("target_email");
         if (rawTarget != null) {
@@ -88,6 +95,9 @@ public class Profile extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Run the "Solo Leveling" System Entrance Animation
+        SystemEntranceAnim.applySystemEntranceAnimation(topBar, profileWindow, bottomIcons);
     }
 
     private void initViews() {

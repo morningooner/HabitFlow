@@ -3,11 +3,13 @@ package com.example.habitflows;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,10 @@ public class RankingMenu extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDB = FirebaseFirestore.getInstance();
 
+        TextView tvRankingHeader = findViewById(R.id.tvRankingHeader);
+        ImageView btnRankingBack = findViewById(R.id.btnRankingBack);
+        LinearLayout rankContainer = findViewById(R.id.rankContainer);
+
         // Initialize UI
         tvUsername = findViewById(R.id.tvUsername);
         tvUserRankClass = findViewById(R.id.tvUserRankClass);
@@ -61,6 +67,9 @@ public class RankingMenu extends AppCompatActivity {
         btnRankingBack.setOnClickListener(v -> finish());
 
         loadUserStats();
+
+        // Run the "Solo Leveling" System Entrance Animation
+        SystemEntranceAnim.applySystemEntranceAnimation(tvRankingHeader, rankContainer, btnRankingBack);
     }
 
     private void loadUserStats() {

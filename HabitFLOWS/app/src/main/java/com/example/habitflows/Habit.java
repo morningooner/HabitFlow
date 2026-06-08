@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -41,6 +42,9 @@ public class Habit extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDB = FirebaseFirestore.getInstance();
 
+        //Views for ANIMATION
+        LinearLayout notificationContainer = findViewById(R.id.notificationContainer);
+
         // Initialize UI
         ImageView btnBackProfile = findViewById(R.id.btnBackProfile);
         FloatingActionButton fabAddHabit = findViewById(R.id.fabAddHabit);
@@ -68,6 +72,9 @@ public class Habit extends AppCompatActivity {
 
         // Show creation dialog when FAB is clicked
         fabAddHabit.setOnClickListener(v -> showCreateHabitDialog());
+
+        // Run the "Solo Leveling" System Entrance Animation
+        SystemEntranceAnim.applySystemEntranceAnimation(btnBackProfile, notificationContainer, fabAddHabit);
     }
 
     //Load habit everytime onCreate and everytime changed

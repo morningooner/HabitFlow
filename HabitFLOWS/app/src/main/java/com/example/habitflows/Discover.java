@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -56,6 +59,10 @@ public class Discover extends AppCompatActivity {
             mAuth = FirebaseAuth.getInstance();
             mDB = FirebaseFirestore.getInstance();
 
+            ConstraintLayout topBar = findViewById(R.id.topBar);
+            CardView discoverWindow = findViewById(R.id.contentWindow);
+            LinearLayout bottomIcons = findViewById(R.id.bottomIcons);
+
             ImageView btnBack = findViewById(R.id.btnBackDiscover);
             rvDiscover = findViewById(R.id.rvDiscover);
             toggleGroup = findViewById(R.id.toggleGroupDiscover);
@@ -70,8 +77,11 @@ public class Discover extends AppCompatActivity {
                 v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
                 return insets;
             });
-
             loadCurrentUserAndData();
+
+            // Run the "Solo Leveling" System Entrance Animation
+            SystemEntranceAnim.applySystemEntranceAnimation(topBar, discoverWindow, bottomIcons);
+
         } catch (Exception e) {
             Log.e("Discover", "Crash in onCreate", e);
             Toast.makeText(this, "Error opening Discover", Toast.LENGTH_SHORT).show();

@@ -283,12 +283,12 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvProfileHabits"
+                    <LinearLayout
+                        android:id="@+id/llHabitsList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:nestedScrollingEnabled="false" />
+                        android:orientation="vertical" />
 
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
