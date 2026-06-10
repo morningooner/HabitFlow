@@ -1,5 +1,6 @@
 package com.example.habitflows;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +8,8 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,7 +43,7 @@ import java.util.Map;
 public class Profile extends AppCompatActivity {
 
     private ImageView ivProfile;
-    private TextView tvName, tvDescription, tvFollowingCount, tvFollowerCount, tvPostCount, tvLevelDisplay, tvUserHeaderName, tvStreakProfile;
+    private TextView tvName, tvDescription, tvFollowingCount, tvFollowerCount, tvPostCount, tvLevelDisplay, tvUserHeaderName;
     private MaterialButton btnFollow;
     private LinearLayout llHabitsList;
     
@@ -55,6 +58,29 @@ public class Profile extends AppCompatActivity {
                 if (uri != null) {
                     ivProfile.setImageURI(uri);
                     uploadImageToFirestore(uri);
+                }
+            });
+
+    private String pendingPostImageBase64;
+    private ImageView dialogImagePreview;
+    private View dialogImagePlaceholder;
+    private View dialogChangePhotoOverlay;
+
+    private final ActivityResultLauncher<PickVisualMediaRequest> pickPostImage =
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri == null || dialogImagePreview == null) return;
+                try {
+                    InputStream inputStream = getContentResolver().openInputStream(uri);
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 40, baos);
+                    pendingPostImageBase64 = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+                    dialogImagePreview.setImageBitmap(bitmap);
+                    dialogImagePreview.setVisibility(View.VISIBLE);
+                    if (dialogImagePlaceholder != null) dialogImagePlaceholder.setVisibility(View.GONE);
+                    if (dialogChangePhotoOverlay != null) dialogChangePhotoOverlay.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                    pendingPostImageBase64 = null;
                 }
             });
 
@@ -108,7 +134,6 @@ public class Profile extends AppCompatActivity {
         tvPostCount = findViewById(R.id.tvPostCount);
         tvLevelDisplay = findViewById(R.id.tvLevelDisplay);
         tvUserHeaderName = findViewById(R.id.tvUserHeaderName);
-        tvStreakProfile = findViewById(R.id.tvStreakProfile);
         btnFollow = findViewById(R.id.btnFollow);
         llHabitsList = findViewById(R.id.llHabitsList);
         ImageView ivBack = findViewById(R.id.ivBack);
@@ -143,11 +168,6 @@ public class Profile extends AppCompatActivity {
                 if (user != null) {
                     tvName.setText(user.getUsername());
                     tvLevelDisplay.setText("LVL : " + (user.getOverallProgress() / 10 + 1));
-                    
-                    if (tvStreakProfile != null) {
-                        tvStreakProfile.setText(String.valueOf(user.getStreak()));
-                    }
-                    
                     String encodedImage = user.getProfileImageBase64();
                     if (encodedImage != null && !encodedImage.isEmpty()) {
                         try {
@@ -190,20 +210,22 @@ public class Profile extends AppCompatActivity {
         TextView tvPercentage = habitView.findViewById(R.id.tvHabitPercentage);
         View btnEdit = habitView.findViewById(R.id.btnEditHabit);
         View btnDelete = habitView.findViewById(R.id.btnDeleteHabit);
-        View cbHabitDone = habitView.findViewById(R.id.cbHabitDone);
+        View btnPost = habitView.findViewById(R.id.btnPostHabit);
 
-        // Hide completion checkbox in profile view
-        if (cbHabitDone != null) {
-            cbHabitDone.setVisibility(View.GONE);
-        }
-
-        if (!isOwnProfile) {
-            btnEdit.setVisibility(View.GONE);
-            btnDelete.setVisibility(View.GONE);
+        // Change Edit/Delete to Post in Profile
+        btnEdit.setVisibility(View.GONE);
+        btnDelete.setVisibility(View.GONE);
+        
+        if (isOwnProfile) {
+            btnPost.setVisibility(View.VISIBLE);
+            btnPost.setOnClickListener(v -> showPostComposeDialog(habit));
+        } else {
+            btnPost.setVisibility(View.GONE);
         }
 
         tvHabitName.setText(habit.getHabitName());
-        tvDuration.setText(habit.getCompletedDays() + " / " + habit.getDuration() + " " + habit.getUnit());
+        String durationText = habit.getCompletedDays() + " / " + habit.getDuration() + " " + habit.getUnit();
+        tvDuration.setText(durationText);
         
         int progress = (int) ((habit.getCompletedDays() / (float) habit.getDuration()) * 100);
         tvPercentage.setText(progress + "%");
@@ -213,6 +235,104 @@ public class Profile extends AppCompatActivity {
         progressIndicator.setProgress(progress);
 
         llHabitsList.addView(habitView);
+    }
+
+    private void showPostComposeDialog(HabitModel habit) {
+        pendingPostImageBase64 = null;
+
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_post_compose, null);
+
+        TextView tvHabitTitle = dialogView.findViewById(R.id.tvComposeHabitName);
+        EditText etCaption = dialogView.findViewById(R.id.etPostCaption);
+        ImageView ivPreview = dialogView.findViewById(R.id.ivComposeImagePreview);
+        View llPlaceholder = dialogView.findViewById(R.id.llImagePlaceholder);
+        View tvChange = dialogView.findViewById(R.id.tvChangePhoto);
+        View framePicker = dialogView.findViewById(R.id.frameImagePicker);
+        View btnCancel = dialogView.findViewById(R.id.btnComposeCancel);
+        View btnPost = dialogView.findViewById(R.id.btnComposePost);
+
+        dialogImagePreview = ivPreview;
+        dialogImagePlaceholder = llPlaceholder;
+        dialogChangePhotoOverlay = tvChange;
+
+        tvHabitTitle.setText(habit.getHabitName().toUpperCase());
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        framePicker.setOnClickListener(v -> pickPostImage.launch(
+                new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build()));
+
+        btnCancel.setOnClickListener(v -> {
+            clearDialogRefs();
+            dialog.dismiss();
+        });
+
+        btnPost.setOnClickListener(v -> {
+            String caption = etCaption.getText() != null ? etCaption.getText().toString().trim() : "";
+            String imageBase64 = pendingPostImageBase64;
+            clearDialogRefs();
+            dialog.dismiss();
+            postHabitActivity(habit, caption, imageBase64);
+        });
+
+        dialog.show();
+    }
+
+    private void clearDialogRefs() {
+        dialogImagePreview = null;
+        dialogImagePlaceholder = null;
+        dialogChangePhotoOverlay = null;
+        pendingPostImageBase64 = null;
+    }
+
+    private void postHabitActivity(HabitModel habit, String caption, String postImageBase64) {
+        if (currentUser == null || currentUser.getEmail() == null) return;
+        String email = currentUser.getEmail().toLowerCase().trim();
+
+        mDB.collection("Users").document(email).get().addOnSuccessListener(doc -> {
+            if (doc.exists()) {
+                UserModel user = doc.toObject(UserModel.class);
+                if (user != null) {
+                    int progress = (int) ((habit.getCompletedDays() / (float) habit.getDuration()) * 100);
+                    String durationText = habit.getCompletedDays() + " / " + habit.getDuration() + " " + habit.getUnit();
+
+                    ActivityModel activity = new ActivityModel(
+                            currentUser.getUid(),
+                            user.getUsername(),
+                            habit.getHabitName(),
+                            com.google.firebase.Timestamp.now(),
+                            email,
+                            user.getProfileImageBase64(),
+                            progress,
+                            durationText,
+                            caption,
+                            postImageBase64
+                    );
+
+                    mDB.collection("Activities").add(activity)
+                            .addOnSuccessListener(ref -> new AlertDialog.Builder(this)
+                                    .setTitle("ACTIVITY POSTED")
+                                    .setMessage("Your habit progress has been shared to the Discover feed.")
+                                    .setPositiveButton("VIEW FEED", (d, w) -> {
+                                        Intent intent = new Intent(Profile.this, Discover.class);
+                                        intent.putExtra("show_feed", true);
+                                        startActivity(intent);
+                                    })
+                                    .setNegativeButton("CLOSE", null)
+                                    .show())
+                            .addOnFailureListener(e -> Toast.makeText(this, "Failed to post activity", Toast.LENGTH_SHORT).show());
+                }
+            }
+        });
     }
 
     private void checkIfFollowing() {

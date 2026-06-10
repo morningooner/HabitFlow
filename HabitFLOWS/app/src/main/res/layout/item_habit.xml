@@ -65,6 +65,22 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPostHabit"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="4dp"
+                android:text="POST"
+                android:textColor="#3B82F6"
+                android:textSize="10sp"
+                app:icon="@android:drawable/ic_menu_share"
+                app:iconSize="12dp"
+                app:iconTint="#3B82F6"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEditHabit"
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"

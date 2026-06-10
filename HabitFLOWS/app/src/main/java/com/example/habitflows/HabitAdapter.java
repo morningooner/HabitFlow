@@ -20,6 +20,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
     private OnHabitDeleteListener deleteListener;
     private OnHabitEditListener editListener;
     private OnHabitStatusChangeListener statusChangeListener;
+    private OnHabitPostListener postListener;
 
     public interface OnHabitDeleteListener {
         void onDelete(HabitModel habit);
@@ -33,82 +34,105 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         void onStatusChange(HabitModel habit, boolean isCompleted);
     }
 
-    public HabitAdapter(List<HabitModel> habitList, OnHabitEditListener editListener, 
-                        OnHabitDeleteListener deleteListener, OnHabitStatusChangeListener statusChangeListener) {
-        this.habitList = habitList;
-        this.editListener = editListener;
-        this.deleteListener = deleteListener;
-        this.statusChangeListener = statusChangeListener;
+    public interface OnHabitPostListener {
+        void onPost(HabitModel habit);
     }
 
-    @NonNull
-    @Override
-    public HabitViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit, parent, false);
-        return new HabitViewHolder(view);
-    }
+    public
+        HabitAdapter(List < HabitModel > habitList, OnHabitEditListener editListener, OnHabitDeleteListener deleteListener, OnHabitStatusChangeListener statusChangeListener)
+        {
+            this.habitList = habitList;
+            this.editListener = editListener;
+            this.deleteListener = deleteListener;
+            this.statusChangeListener = statusChangeListener;
+        }
 
-    @Override
-    public void onBindViewHolder(@NonNull HabitViewHolder holder, int position) {
-        HabitModel habit = habitList.get(position);
-        holder.tvHabitName.setText(habit.getHabitName());
-        holder.tvHabitDuration.setText(habit.getDuration() + " Days Goal");
+    public
+        HabitAdapter(List < HabitModel > habitList, OnHabitEditListener editListener, OnHabitDeleteListener deleteListener)
+        {
+            this.habitList = habitList;
+            this.editListener = editListener;
+            this.deleteListener = deleteListener;
+            this.statusChangeListener = statusChangeListener;
+            this.postListener = postListener;
+        }
 
-        // Calculate progress based on completedDays
-        int completed = habit.getCompletedDays();
-        int total = habit.getDuration();
-        
-        int percentage = (total > 0) ? (int) (((float) completed / total) * 100) : 0;
-        percentage = Math.min(percentage, 100);
+        @NonNull
+        @Override
+        public HabitViewHolder onCreateViewHolder (@NonNull ViewGroup parent,int viewType){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit, parent, false);
+            return new HabitViewHolder(view);
+        }
 
-        holder.habitProgressIndicator.setProgress(percentage);
-        holder.tvHabitPercentage.setText(percentage + "%");
+        @Override
+        public void onBindViewHolder (@NonNull HabitViewHolder holder,int position){
+            HabitModel habit = habitList.get(position);
+            holder.tvHabitName.setText(habit.getHabitName());
+            holder.tvHabitDuration.setText(habit.getDuration() + " Minute Left");
 
-        // Set checkbox status
-        holder.cbHabitDone.setOnCheckedChangeListener(null);
-        holder.cbHabitDone.setChecked(habit.isTodayCompleted());
-        holder.cbHabitDone.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (statusChangeListener != null) {
-                statusChangeListener.onStatusChange(habit, isChecked);
+            // Calculate progress based on completedDays
+            int completed = habit.getCompletedDays();
+            int total = habit.getDuration();
+
+            int percentage = (total > 0) ? (int) (((float) completed / total) * 100) : 0;
+            percentage = Math.min(percentage, 100);
+
+            holder.habitProgressIndicator.setProgress(percentage);
+            holder.tvHabitPercentage.setText(percentage + "%");
+
+            // Set checkbox status
+            holder.cbHabitDone.setOnCheckedChangeListener(null);
+            holder.cbHabitDone.setChecked(habit.isTodayCompleted());
+            holder.cbHabitDone.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (statusChangeListener != null) {
+                    statusChangeListener.onStatusChange(habit, isChecked);
+                }
+            });
+
+            // Hide Edit/Delete if no listeners provided
+            if (deleteListener == null) {
+                holder.btnDeleteHabit.setVisibility(View.GONE);
+            } else {
+                holder.btnDeleteHabit.setVisibility(View.VISIBLE);
+                holder.btnDeleteHabit.setOnClickListener(v -> deleteListener.onDelete(habit));
             }
-        });
 
-        // Hide Edit/Delete if no listeners provided
-        if (deleteListener == null) {
-            holder.btnDeleteHabit.setVisibility(View.GONE);
-        } else {
-            holder.btnDeleteHabit.setVisibility(View.VISIBLE);
-            holder.btnDeleteHabit.setOnClickListener(v -> deleteListener.onDelete(habit));
+            if (editListener == null) {
+                holder.btnEditHabit.setVisibility(View.GONE);
+            } else {
+                holder.btnEditHabit.setVisibility(View.VISIBLE);
+                holder.btnEditHabit.setOnClickListener(v -> editListener.onEdit(habit));
+            }
+
+            if (postListener == null) {
+                holder.btnPostHabit.setVisibility(View.GONE);
+            } else {
+                holder.btnPostHabit.setVisibility(View.VISIBLE);
+                holder.btnPostHabit.setOnClickListener(v -> postListener.onPost(habit));
+            }
         }
 
-        if (editListener == null) {
-            holder.btnEditHabit.setVisibility(View.GONE);
-        } else {
-            holder.btnEditHabit.setVisibility(View.VISIBLE);
-            holder.btnEditHabit.setOnClickListener(v -> editListener.onEdit(habit));
+        @Override
+        public int getItemCount () {
+            return habitList.size();
+        }
+
+        static class HabitViewHolder extends RecyclerView.ViewHolder {
+            TextView tvHabitName, tvHabitDuration, tvHabitPercentage;
+            LinearProgressIndicator habitProgressIndicator;
+            Button btnDeleteHabit, btnEditHabit;
+            CheckBox cbHabitDone;
+            Button btnPostHabit;
+            public HabitViewHolder(@NonNull View itemView) {
+                super(itemView);
+                tvHabitName = itemView.findViewById(R.id.tvHabitName);
+                tvHabitDuration = itemView.findViewById(R.id.tvHabitDuration);
+                tvHabitPercentage = itemView.findViewById(R.id.tvHabitPercentage);
+                habitProgressIndicator = itemView.findViewById(R.id.habitProgressIndicator);
+                btnDeleteHabit = itemView.findViewById(R.id.btnDeleteHabit);
+                btnEditHabit = itemView.findViewById(R.id.btnEditHabit);
+                cbHabitDone = itemView.findViewById(R.id.cbHabitDone);
+                btnPostHabit = itemView.findViewById(R.id.btnPostHabit);
+            }
         }
     }
-
-    @Override
-    public int getItemCount() {
-        return habitList.size();
-    }
-
-    static class HabitViewHolder extends RecyclerView.ViewHolder {
-        TextView tvHabitName, tvHabitDuration, tvHabitPercentage;
-        LinearProgressIndicator habitProgressIndicator;
-        Button btnDeleteHabit, btnEditHabit;
-        CheckBox cbHabitDone;
-
-        public HabitViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvHabitName = itemView.findViewById(R.id.tvHabitName);
-            tvHabitDuration = itemView.findViewById(R.id.tvHabitDuration);
-            tvHabitPercentage = itemView.findViewById(R.id.tvHabitPercentage);
-            habitProgressIndicator = itemView.findViewById(R.id.habitProgressIndicator);
-            btnDeleteHabit = itemView.findViewById(R.id.btnDeleteHabit);
-            btnEditHabit = itemView.findViewById(R.id.btnEditHabit);
-            cbHabitDone = itemView.findViewById(R.id.cbHabitDone);
-        }
-    }
-}

@@ -89,53 +89,72 @@
                     app:layout_constraintTop_toBottomOf="@id/tvDiscoverTitle" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Selection Toggle Group -->
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:id="@+id/toggleGroupDiscover"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:checkedButton="@+id/btnFollowPeople"
+            <!-- Scrollable content: both sections -->
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/windowHeader"
-                app:selectionRequired="true"
-                app:singleSelection="true">
+                app:layout_constraintTop_toBottomOf="@id/windowHeader">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnActivityFeed"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Post Activity"
-                    android:textColor="@color/baby_blue"
-                    android:textSize="12sp"
-                    app:strokeColor="@color/border" />
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnFollowPeople"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Follow People"
-                    android:textColor="@color/baby_blue"
-                    android:textSize="12sp"
-                    app:strokeColor="@color/border" />
+                    <!-- FOLLOW PEOPLE section -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0.2"
+                        android:paddingHorizontal="16dp"
+                        android:paddingTop="14dp"
+                        android:paddingBottom="8dp"
+                        android:text="FOLLOW PEOPLE"
+                        android:textColor="#3B82F6"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
 
-            </com.google.android.material.button.MaterialButtonToggleGroup>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvUsers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="10dp" />
 
-            <!-- Content List -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvDiscover"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="12dp"
-                android:clipToPadding="false"
-                android:paddingHorizontal="16dp"
-                android:paddingBottom="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toggleGroupDiscover"
-                tools:listitem="@layout/item_user" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="16dp"
+                        android:background="#1F2937" />
+
+                    <!-- POST ACTIVITY section -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0.2"
+                        android:paddingHorizontal="16dp"
+                        android:paddingTop="14dp"
+                        android:paddingBottom="4dp"
+                        android:text="POST ACTIVITY"
+                        android:textColor="#3B82F6"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvPosts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:nestedScrollingEnabled="false"
+                        android:paddingBottom="8dp" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -148,6 +167,6 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
