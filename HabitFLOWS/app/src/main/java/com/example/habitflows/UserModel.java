@@ -12,6 +12,9 @@ public class UserModel {
     private int xp = 0;
     private String rank = "F";
     private String profileImageBase64 = "";
+    private int streak = 0;
+    private String lastStreakUpdateDate = "";
+    private String lastHabitResetDate = "";
 
     public UserModel() {
         // Required for Firestore
@@ -26,6 +29,9 @@ public class UserModel {
         this.xp = 0;
         this.rank = "F";
         this.profileImageBase64 = "";
+        this.streak = 0;
+        this.lastStreakUpdateDate = "";
+        this.lastHabitResetDate = "";
     }
 
     public String getUsername() { return username; }
@@ -55,4 +61,13 @@ public class UserModel {
 
     public String getProfileImageBase64() { return profileImageBase64; }
     public void setProfileImageBase64(String profileImageBase64) { this.profileImageBase64 = profileImageBase64 != null ? profileImageBase64 : ""; }
+
+    public int getStreak() { return streak; }
+    public void setStreak(int streak) { this.streak = streak; }
+
+    public String getLastStreakUpdateDate() { return lastStreakUpdateDate; }
+    public void setLastStreakUpdateDate(String lastStreakUpdateDate) { this.lastStreakUpdateDate = lastStreakUpdateDate; }
+
+    public String getLastHabitResetDate() { return lastHabitResetDate; }
+    public void setLastHabitResetDate(String lastHabitResetDate) { this.lastHabitResetDate = lastHabitResetDate; }
 }

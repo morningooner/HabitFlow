@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Corner Ornaments (Simplified geometric placeholders to mimic the theme) -->
+        <!-- Corner Ornaments -->
         <View
             android:layout_width="12dp"
             android:layout_height="2dp"
@@ -30,32 +30,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:layout_width="12dp"
-            android:layout_height="2dp"
-            android:background="#3B82F6"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-        <View
-            android:layout_width="2dp"
-            android:layout_height="12dp"
-            android:background="#3B82F6"
-            app:layout_constraintEnd_toEndOf="parent"
+        <CheckBox
+            android:id="@+id/cbHabitDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/baby_blue"
+            android:clickable="false"
+            android:focusable="false"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvHabitName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:letterSpacing="0.1"
             android:text="HABIT NAME"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/cbHabitDone"
             app:layout_constraintEnd_toStartOf="@+id/llButtons"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/cbHabitDone"
+            app:layout_constraintTop_toTopOf="@+id/cbHabitDone" />
 
         <LinearLayout
             android:id="@+id/llButtons"
@@ -102,7 +101,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
             android:background="#1F2937"
-            app:layout_constraintTop_toBottomOf="@id/tvHabitName" />
+            app:layout_constraintTop_toBottomOf="@id/cbHabitDone" />
 
         <LinearLayout
             android:id="@+id/llDuration"
@@ -135,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="COMPLETION PROGRESS"
+            android:text="OVERALL PROGRESS"
             android:textColor="#60A5FA"
             android:textSize="10sp"
             android:textStyle="bold"

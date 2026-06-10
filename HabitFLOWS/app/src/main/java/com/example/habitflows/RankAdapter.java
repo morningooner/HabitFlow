@@ -1,5 +1,8 @@
 package com.example.habitflows;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +40,20 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder
         holder.tvUserName.setText(user.getUsername());
         holder.tvUserXP.setText(user.getXp() + " XP");
 
-        if (user.getProfileImageBase64() != null && !user.getProfileImageBase64().isEmpty()) {
-            Glide.with(holder.itemView.getContext())
-                    .load(user.getProfileImageBase64())
-                    .placeholder(R.drawable.profilepic)
-                    .into(holder.ivUserAvatar);
+        String base64String = user.getProfileImageBase64();
+        if (base64String != null && !base64String.isEmpty()) {
+            try {
+                // For Glide to load Base64, we need to decode it to a byte array
+                byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
+                Glide.with(holder.itemView.getContext())
+                        .asBitmap()
+                        .load(decodedString)
+                        .placeholder(R.drawable.profilepic)
+                        .error(R.drawable.profilepic)
+                        .into(holder.ivUserAvatar);
+            } catch (Exception e) {
+                holder.ivUserAvatar.setImageResource(R.drawable.profilepic);
+            }
         } else {
             holder.ivUserAvatar.setImageResource(R.drawable.profilepic);
         }

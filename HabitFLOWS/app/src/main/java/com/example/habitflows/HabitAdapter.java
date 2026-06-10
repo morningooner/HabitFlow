@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
     private List<HabitModel> habitList;
     private OnHabitDeleteListener deleteListener;
     private OnHabitEditListener editListener;
+    private OnHabitStatusChangeListener statusChangeListener;
 
     public interface OnHabitDeleteListener {
         void onDelete(HabitModel habit);
@@ -27,10 +29,16 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         void onEdit(HabitModel habit);
     }
 
-    public HabitAdapter(List<HabitModel> habitList, OnHabitEditListener editListener, OnHabitDeleteListener deleteListener) {
+    public interface OnHabitStatusChangeListener {
+        void onStatusChange(HabitModel habit, boolean isCompleted);
+    }
+
+    public HabitAdapter(List<HabitModel> habitList, OnHabitEditListener editListener, 
+                        OnHabitDeleteListener deleteListener, OnHabitStatusChangeListener statusChangeListener) {
         this.habitList = habitList;
         this.editListener = editListener;
         this.deleteListener = deleteListener;
+        this.statusChangeListener = statusChangeListener;
     }
 
     @NonNull
@@ -46,17 +54,26 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         holder.tvHabitName.setText(habit.getHabitName());
         holder.tvHabitDuration.setText(habit.getDuration() + " Days Goal");
 
-        // Calculate progress based on completedDays from the timer sessions
+        // Calculate progress based on completedDays
         int completed = habit.getCompletedDays();
         int total = habit.getDuration();
         
         int percentage = (total > 0) ? (int) (((float) completed / total) * 100) : 0;
-        percentage = Math.min(percentage, 100); // Cap at 100%
+        percentage = Math.min(percentage, 100);
 
         holder.habitProgressIndicator.setProgress(percentage);
         holder.tvHabitPercentage.setText(percentage + "%");
 
-        // Hide Edit/Delete if no listeners provided (e.g., in Profile view)
+        // Set checkbox status
+        holder.cbHabitDone.setOnCheckedChangeListener(null);
+        holder.cbHabitDone.setChecked(habit.isTodayCompleted());
+        holder.cbHabitDone.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (statusChangeListener != null) {
+                statusChangeListener.onStatusChange(habit, isChecked);
+            }
+        });
+
+        // Hide Edit/Delete if no listeners provided
         if (deleteListener == null) {
             holder.btnDeleteHabit.setVisibility(View.GONE);
         } else {
@@ -81,6 +98,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         TextView tvHabitName, tvHabitDuration, tvHabitPercentage;
         LinearProgressIndicator habitProgressIndicator;
         Button btnDeleteHabit, btnEditHabit;
+        CheckBox cbHabitDone;
 
         public HabitViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,6 +108,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
             habitProgressIndicator = itemView.findViewById(R.id.habitProgressIndicator);
             btnDeleteHabit = itemView.findViewById(R.id.btnDeleteHabit);
             btnEditHabit = itemView.findViewById(R.id.btnEditHabit);
+            cbHabitDone = itemView.findViewById(R.id.cbHabitDone);
         }
     }
 }

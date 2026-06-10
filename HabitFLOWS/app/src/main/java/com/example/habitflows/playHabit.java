@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,9 +20,11 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -55,6 +58,8 @@ public class playHabit extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDB = FirebaseFirestore.getInstance();
 
+        LinearLayout playContainer = findViewById(R.id.playContainer);
+
         btnBackPlay = findViewById(R.id.btnBackPlay);
         tvHabitPlayName = findViewById(R.id.tvHabitPlayName);
         tvTimer = findViewById(R.id.tvTimer);
@@ -78,6 +83,8 @@ public class playHabit extends AppCompatActivity {
         btnResetTimer.setOnClickListener(v -> resetTimer());
 
         loadHabitsFromFirestore();
+
+        SystemEntranceAnim.applySystemEntranceAnimation(btnBackPlay, playContainer, tvHabitPlayName);
     }
 
     @Override
@@ -213,19 +220,56 @@ public class playHabit extends AppCompatActivity {
 
         String userEmail = mAuth.getCurrentUser().getEmail();
 
-        // 1. Update the habit's completedDays
+        // 1. Update the habit's completedDays and mark as todayCompleted
         mDB.collection("Users").document(userEmail)
                 .collection("Habits").document(habitName)
-                .update("completedDays", FieldValue.increment(1));
-
-        // 2. Award +10 XP to the user
-        mDB.collection("Users").document(userEmail)
-                .update("xp", FieldValue.increment(90))
+                .update("completedDays", FieldValue.increment(1), "todayCompleted", true)
                 .addOnSuccessListener(aVoid -> {
-                    Log.d("PlayHabit", "Progress and +10 XP recorded for: " + habitName);
-                    Toast.makeText(this, "Session complete! +10 XP earned.", Toast.LENGTH_LONG).show();
+                    Log.d("PlayHabit", "Habit progress recorded: " + habitName);
+                    checkAllHabitsCompleted(); // Check if this was the last quest for the streak
+                });
+
+        // 2. Award +90 XP to the user (Adjusted from your code's increment(90))
+        mDB.collection("Users").document(userEmail)
+                .update("xp", FieldValue.increment(10))
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "QUEST COMPLETE! +10 XP earned.", Toast.LENGTH_LONG).show();
                 })
                 .addOnFailureListener(e -> Log.e("PlayHabit", "Error updating progress/XP", e));
+    }
+
+    private void checkAllHabitsCompleted() {
+        if (mAuth.getCurrentUser() == null) return;
+        String email = mAuth.getCurrentUser().getEmail();
+        String today = LocalDate.now().toString();
+
+        mDB.collection("Users").document(email).get().addOnSuccessListener(userDoc -> {
+            UserModel user = userDoc.toObject(UserModel.class);
+            if (user != null && !today.equals(user.getLastStreakUpdateDate())) {
+                
+                mDB.collection("Users").document(email).collection("Habits").get().addOnSuccessListener(query -> {
+                    boolean allDone = true;
+                    if (query.isEmpty()) return;
+
+                    for (DocumentSnapshot doc : query) {
+                        HabitModel habit = doc.toObject(HabitModel.class);
+                        if (habit != null && !habit.isTodayCompleted()) {
+                            allDone = false;
+                            break;
+                        }
+                    }
+
+                    if (allDone) {
+                        int newStreak = user.getStreak() + 1;
+                        mDB.collection("Users").document(email)
+                                .update("streak", newStreak, "lastStreakUpdateDate", today)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(this, "SYSTEM ALERT: All Quests Cleared! Streak: " + newStreak, Toast.LENGTH_LONG).show();
+                                });
+                    }
+                });
+            }
+        });
     }
 
     private void updateCountDownText() {

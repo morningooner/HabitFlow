@@ -24,7 +24,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
-import com.google.api.Distribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -41,7 +40,7 @@ import java.util.Map;
 public class Profile extends AppCompatActivity {
 
     private ImageView ivProfile;
-    private TextView tvName, tvDescription, tvFollowingCount, tvFollowerCount, tvPostCount, tvLevelDisplay, tvUserHeaderName;
+    private TextView tvName, tvDescription, tvFollowingCount, tvFollowerCount, tvPostCount, tvLevelDisplay, tvUserHeaderName, tvStreakProfile;
     private MaterialButton btnFollow;
     private LinearLayout llHabitsList;
     
@@ -109,6 +108,7 @@ public class Profile extends AppCompatActivity {
         tvPostCount = findViewById(R.id.tvPostCount);
         tvLevelDisplay = findViewById(R.id.tvLevelDisplay);
         tvUserHeaderName = findViewById(R.id.tvUserHeaderName);
+        tvStreakProfile = findViewById(R.id.tvStreakProfile);
         btnFollow = findViewById(R.id.btnFollow);
         llHabitsList = findViewById(R.id.llHabitsList);
         ImageView ivBack = findViewById(R.id.ivBack);
@@ -143,6 +143,10 @@ public class Profile extends AppCompatActivity {
                 if (user != null) {
                     tvName.setText(user.getUsername());
                     tvLevelDisplay.setText("LVL : " + (user.getOverallProgress() / 10 + 1));
+                    
+                    if (tvStreakProfile != null) {
+                        tvStreakProfile.setText(String.valueOf(user.getStreak()));
+                    }
                     
                     String encodedImage = user.getProfileImageBase64();
                     if (encodedImage != null && !encodedImage.isEmpty()) {
@@ -186,6 +190,12 @@ public class Profile extends AppCompatActivity {
         TextView tvPercentage = habitView.findViewById(R.id.tvHabitPercentage);
         View btnEdit = habitView.findViewById(R.id.btnEditHabit);
         View btnDelete = habitView.findViewById(R.id.btnDeleteHabit);
+        View cbHabitDone = habitView.findViewById(R.id.cbHabitDone);
+
+        // Hide completion checkbox in profile view
+        if (cbHabitDone != null) {
+            cbHabitDone.setVisibility(View.GONE);
+        }
 
         if (!isOwnProfile) {
             btnEdit.setVisibility(View.GONE);

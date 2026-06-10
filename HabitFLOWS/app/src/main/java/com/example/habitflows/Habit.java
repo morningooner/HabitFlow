@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class Habit extends AppCompatActivity {
 
         // Setup RecyclerView
         habitList = new ArrayList<>();
-        adapter = new HabitAdapter(habitList, this::showEditDialog, this::deleteHabit);
+        adapter = new HabitAdapter(habitList, this::showEditDialog, this::deleteHabit, this::updateHabitStatus);
         rvHabits.setLayoutManager(new LinearLayoutManager(this));
         rvHabits.setAdapter(adapter);
 
@@ -77,7 +78,6 @@ public class Habit extends AppCompatActivity {
         SystemEntranceAnim.applySystemEntranceAnimation(btnBackProfile, notificationContainer, fabAddHabit);
     }
 
-    //Load habit everytime onCreate and everytime changed
     private void listenForHabits() {
         if (mAuth.getCurrentUser() == null) return;
 
@@ -101,6 +101,52 @@ public class Habit extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
                     }
                 });
+    }
+
+    private void updateHabitStatus(HabitModel habit, boolean isCompleted) {
+        if (mAuth.getCurrentUser() == null) return;
+        String email = mAuth.getCurrentUser().getEmail();
+
+        mDB.collection("Users").document(email)
+                .collection("Habits").document(habit.getHabitName())
+                .update("todayCompleted", isCompleted)
+                .addOnSuccessListener(aVoid -> {
+                    if (isCompleted) {
+                        checkAllHabitsCompleted();
+                    }
+                });
+    }
+
+    private void checkAllHabitsCompleted() {
+        if (mAuth.getCurrentUser() == null) return;
+        String email = mAuth.getCurrentUser().getEmail();
+        String today = LocalDate.now().toString();
+
+        mDB.collection("Users").document(email).get().addOnSuccessListener(userDoc -> {
+            UserModel user = userDoc.toObject(UserModel.class);
+            if (user != null && !today.equals(user.getLastStreakUpdateDate())) {
+                
+                mDB.collection("Users").document(email).collection("Habits").get().addOnSuccessListener(query -> {
+                    boolean allDone = true;
+                    for (DocumentSnapshot doc : query) {
+                        HabitModel habit = doc.toObject(HabitModel.class);
+                        if (habit != null && !habit.isTodayCompleted()) {
+                            allDone = false;
+                            break;
+                        }
+                    }
+
+                    if (allDone && !query.isEmpty()) {
+                        int newStreak = user.getStreak() + 1;
+                        mDB.collection("Users").document(email)
+                                .update("streak", newStreak, "lastStreakUpdateDate", today)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(this, "CONGRATULATIONS! Daily streak updated to " + newStreak + "!", Toast.LENGTH_LONG).show();
+                                });
+                    }
+                });
+            }
+        });
     }
 
     private void showCreateHabitDialog() {
@@ -173,6 +219,7 @@ public class Habit extends AppCompatActivity {
         HabitModel updatedHabit = new HabitModel(newName, newDuration, oldHabit.getUnit());
         updatedHabit.setStartDate(oldHabit.getStartDate());
         updatedHabit.setCompletedDays(oldHabit.getCompletedDays());
+        updatedHabit.setTodayCompleted(oldHabit.isTodayCompleted());
 
         mDB.collection("Users")
                 .document(userEmail)
