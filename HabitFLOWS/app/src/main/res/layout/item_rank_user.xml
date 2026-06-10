@@ -52,19 +52,35 @@
             app:tint="@color/purple_200" />
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/tvUserName"
+    <LinearLayout
+        android:id="@+id/llUserInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="User Name"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tvUserXP"
         app:layout_constraintStart_toEndOf="@id/avatarContainer"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Name"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvUserProfessionItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Assassin"
+            android:textColor="#A78BFA"
+            android:textSize="12sp"
+            android:textStyle="italic" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvUserXP"

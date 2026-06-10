@@ -40,10 +40,18 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder
         holder.tvUserName.setText(user.getUsername());
         holder.tvUserXP.setText(user.getXp() + " XP");
 
+        // Display Profession
+        String prof = user.getProfession();
+        if (prof != null && !prof.isEmpty()) {
+            holder.tvUserProfessionItem.setText(prof.toUpperCase());
+            holder.tvUserProfessionItem.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvUserProfessionItem.setVisibility(View.GONE);
+        }
+
         String base64String = user.getProfileImageBase64();
         if (base64String != null && !base64String.isEmpty()) {
             try {
-                // For Glide to load Base64, we need to decode it to a byte array
                 byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
                 Glide.with(holder.itemView.getContext())
                         .asBitmap()
@@ -76,7 +84,7 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder
     }
 
     static class RankViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRankPosition, tvUserName, tvUserXP;
+        TextView tvRankPosition, tvUserName, tvUserXP, tvUserProfessionItem;
         ShapeableImageView ivUserAvatar;
         ImageView ivSmallBadge;
 
@@ -85,6 +93,7 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder
             tvRankPosition = itemView.findViewById(R.id.tvRankPosition);
             tvUserName = itemView.findViewById(R.id.tvUserName);
             tvUserXP = itemView.findViewById(R.id.tvUserXP);
+            tvUserProfessionItem = itemView.findViewById(R.id.tvUserProfessionItem);
             ivUserAvatar = itemView.findViewById(R.id.ivUserAvatar);
             ivSmallBadge = itemView.findViewById(R.id.ivSmallBadge);
         }

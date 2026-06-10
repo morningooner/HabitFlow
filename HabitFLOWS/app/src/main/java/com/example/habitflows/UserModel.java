@@ -11,6 +11,7 @@ public class UserModel {
     private int overallProgress = 0;
     private int xp = 0;
     private String rank = "F";
+    private String profession = "";
     private String profileImageBase64 = "";
     private int streak = 0;
     private String lastStreakUpdateDate = "";
@@ -28,6 +29,7 @@ public class UserModel {
         this.overallProgress = 0;
         this.xp = 0;
         this.rank = "F";
+        this.profession = "";
         this.profileImageBase64 = "";
         this.streak = 0;
         this.lastStreakUpdateDate = "";
@@ -58,6 +60,9 @@ public class UserModel {
 
     public String getRank() { return rank; }
     public void setRank(String rank) { this.rank = rank != null ? rank : "F"; }
+
+    public String getProfession() { return profession; }
+    public void setProfession(String profession) { this.profession = profession != null ? profession : ""; }
 
     public String getProfileImageBase64() { return profileImageBase64; }
     public void setProfileImageBase64(String profileImageBase64) { this.profileImageBase64 = profileImageBase64 != null ? profileImageBase64 : ""; }

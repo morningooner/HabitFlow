@@ -3,7 +3,6 @@ package com.example.habitflows;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -25,14 +24,16 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Random;
+
 public class RankingMenu extends AppCompatActivity {
 
     private FirebaseFirestore mDB;
     private FirebaseAuth mAuth;
     
-    private TextView tvUsername, tvUserRankClass, tvRankInitial, tvXpProgressText, tvXpLabel;
+    private TextView tvUsername, tvUserRankClass, tvRankInitial, tvXpProgressText, tvXpLabel, tvUserProfession;
     private LinearProgressIndicator xpProgressBar;
-    private ImageView ivRankStarDecor, btnRankingBack, ivMainRankBadge;
+    private ImageView ivRankStarDecor, ivMainRankBadge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +54,10 @@ public class RankingMenu extends AppCompatActivity {
         tvRankInitial = findViewById(R.id.tvRankInitial);
         tvXpProgressText = findViewById(R.id.tvXpProgressText);
         tvXpLabel = findViewById(R.id.tvXpLabel);
+        tvUserProfession = findViewById(R.id.tvUserProfession);
         xpProgressBar = findViewById(R.id.xpProgressBar);
         ivRankStarDecor = findViewById(R.id.ivRankStarDecor);
         ivMainRankBadge = findViewById(R.id.ivMainRankBadge);
-        btnRankingBack = findViewById(R.id.btnRankingBack);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -81,10 +82,29 @@ public class RankingMenu extends AppCompatActivity {
                         UserModel user = doc.toObject(UserModel.class);
                         if (user != null) {
                             tvUsername.setText(user.getUsername().toUpperCase());
+                            
+                            // Handle Profession
+                            if (user.getProfession() == null || user.getProfession().isEmpty()) {
+                                assignRandomProfession(user);
+                            } else {
+                                tvUserProfession.setText("PROFESSION: " + user.getProfession().toUpperCase());
+                            }
+
                             updateRankDisplay(user);
                             checkEligibilityToRankUp(user);
                         }
                     }
+                });
+    }
+
+    private void assignRandomProfession(UserModel user) {
+        String[] professions = {"Assassin", "Mage", "Tank", "Fighter", "Marksman"};
+        String randomProf = professions[new Random().nextInt(professions.length)];
+        
+        mDB.collection("Users").document(user.getEmail())
+                .update("profession", randomProf)
+                .addOnSuccessListener(aVoid -> {
+                    tvUserProfession.setText("PROFESSION: " + randomProf.toUpperCase());
                 });
     }
 
