@@ -16,6 +16,7 @@ public class UserModel {
     private int streak = 0;
     private String lastStreakUpdateDate = "";
     private String lastHabitResetDate = "";
+    private String bio = "";
 
     public UserModel() {
         // Required for Firestore
@@ -75,4 +76,7 @@ public class UserModel {
 
     public String getLastHabitResetDate() { return lastHabitResetDate; }
     public void setLastHabitResetDate(String lastHabitResetDate) { this.lastHabitResetDate = lastHabitResetDate; }
+
+    public String getBio() { return bio != null ? bio : ""; }
+    public void setBio(String bio) { this.bio = bio != null ? bio : ""; }
 }

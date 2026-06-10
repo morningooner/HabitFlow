@@ -111,13 +111,20 @@
                 app:iconTint="#EF4444" />
         </LinearLayout>
 
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/topRowBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="cbHabitDone,tvHabitName,llButtons" />
+
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
             android:background="#1F2937"
-            app:layout_constraintTop_toBottomOf="@id/cbHabitDone" />
+            app:layout_constraintTop_toBottomOf="@id/topRowBarrier" />
 
         <LinearLayout
             android:id="@+id/llDuration"

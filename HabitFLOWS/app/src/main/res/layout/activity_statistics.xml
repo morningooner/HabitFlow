@@ -18,46 +18,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tvLevelDisplay"
+            android:id="@+id/tvUserHeaderName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:letterSpacing="0.1"
-            android:text="LVL : 3"
-            android:textColor="#A78BFA"
-            android:textSize="16sp"
+            android:text="PLAYER"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@id/tvLevelDisplay"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvLevelDisplay">
-
-            <TextView
-                android:id="@+id/tvUserHeaderName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="USER"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/ivFlameIcon"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@android:drawable/ic_menu_compass"
-                app:tint="#4ADE80" />
-        </LinearLayout>
+            tools:layout_editor_absoluteY="17dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Main Stats Window -->
+    <!-- Main Stats Card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/statusWindow"
         android:layout_width="0dp"
@@ -79,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- Window Header (Stats Title) -->
+            <!-- Window Header -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/windowHeader"
                 android:layout_width="match_parent"
@@ -94,7 +66,7 @@
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="#4B5563" />
+                    app:tint="#60A5FA" />
 
                 <TextView
                     android:id="@+id/tvStatusTitle"
@@ -118,26 +90,27 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Scrollable Content -->
-            <ScrollView
-                android:id="@+id/scrollViewStats"
-                android:layout_width="match_parent"
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:clipToPadding="false"
-                android:paddingHorizontal="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/windowHeader">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="24dp">
+                    android:paddingHorizontal="20dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="28dp">
 
-                    <!-- Profile & Rank Summary -->
+                    <!-- ==================== IDENTITY ROW ==================== -->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp">
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:id="@+id/llProfileText"
@@ -159,25 +132,17 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tvRpgLv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:text="LV: 3"
-                                android:textColor="#A78BFA"
-                                android:textSize="14sp" />
-
-                            <TextView
                                 android:id="@+id/tvCompletedHabitsCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:text="COMPLETED: 12"
+                                android:layout_marginTop="4dp"
+                                android:text="ACTIVE: 0"
                                 android:textColor="#4ADE80"
-                                android:textSize="14sp"
+                                android:textSize="13sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
+                        <!-- Rank Diamond Badge -->
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/rankBadge"
                             android:layout_width="70dp"
@@ -201,7 +166,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="E"
                                 android:textColor="#FFFFFF"
-                                android:textSize="32sp"
+                                android:textSize="28sp"
                                 android:textStyle="bold"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -212,6 +177,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="2dp"
+                                android:letterSpacing="0.1"
                                 android:text="RANK"
                                 android:textColor="#60A5FA"
                                 android:textSize="9sp"
@@ -225,181 +191,337 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="16dp"
                         android:background="#1F2937" />
 
-                    <!-- Overall Progress Section -->
+                    <!-- ==================== OVERALL COMPLETION ==================== -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:letterSpacing="0.1"
-                        android:text="OVERALL PROGRESS"
+                        android:layout_marginTop="20dp"
+                        android:letterSpacing="0.2"
+                        android:text="OVERALL COMPLETION"
                         android:textColor="#60A5FA"
-                        android:textSize="12sp"
+                        android:textSize="11sp"
                         android:textStyle="bold" />
 
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp">
+                        android:layout_marginTop="12dp">
 
                         <com.google.android.material.progressindicator.CircularProgressIndicator
                             android:id="@+id/cpOverall"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:progress="75"
+                            android:progress="0"
                             app:indicatorColor="#3B82F6"
-                            app:indicatorSize="110dp"
+                            app:indicatorSize="150dp"
                             app:trackColor="#1F2937"
-                            app:trackThickness="10dp" />
+                            app:trackThickness="14dp" />
 
-                        <TextView
-                            android:id="@+id/tvOverallPercent"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="75%"
-                            android:textColor="#FFFFFF"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvOverallPercent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0%"
+                                android:textColor="#FFFFFF"
+                                android:textSize="28sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:letterSpacing="0.2"
+                                android:text="OVERALL"
+                                android:textColor="#6B7280"
+                                android:textSize="9sp" />
+                        </LinearLayout>
                     </FrameLayout>
 
-                    <!-- Checklist Section -->
+                    <!-- 3 Stat Chips -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="#111827"
+                            app:cardCornerRadius="0dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="#1E3A5F"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="10dp">
+
+                                <TextView
+                                    android:id="@+id/tvChipHabits"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textColor="#3B82F6"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:letterSpacing="0.15"
+                                    android:text="HABITS"
+                                    android:textColor="#6B7280"
+                                    android:textSize="9sp" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="4dp"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="#111827"
+                            app:cardCornerRadius="0dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="#14532D"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="10dp">
+
+                                <TextView
+                                    android:id="@+id/tvChipToday"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0%"
+                                    android:textColor="#4ADE80"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:letterSpacing="0.15"
+                                    android:text="TODAY"
+                                    android:textColor="#6B7280"
+                                    android:textSize="9sp" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="#111827"
+                            app:cardCornerRadius="0dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="#3B1F5F"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="10dp">
+
+                                <TextView
+                                    android:id="@+id/tvChipWeekly"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0%"
+                                    android:textColor="#A78BFA"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:letterSpacing="0.15"
+                                    android:text="WEEKLY"
+                                    android:textColor="#6B7280"
+                                    android:textSize="9sp" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="20dp"
+                        android:background="#1F2937" />
+
+                    <!-- ==================== DAILY PROGRESS ==================== -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:letterSpacing="0.2"
+                            android:text="TODAY'S PROGRESS"
+                            android:textColor="#60A5FA"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvDailyPercent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0%"
+                            android:textColor="#4ADE80"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/dailyProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:progress="0"
+                        app:indicatorColor="#4ADE80"
+                        app:trackColor="#1F2937"
+                        app:trackThickness="10dp" />
+
+                    <TextView
+                        android:id="@+id/tvDailyLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="0 / 0 habits completed today"
+                        android:textColor="#6B7280"
+                        android:textSize="12sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="20dp"
+                        android:background="#1F2937" />
+
+                    <!-- ==================== WEEKLY PROGRESS ==================== -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:letterSpacing="0.2"
+                            android:text="WEEKLY PROGRESS"
+                            android:textColor="#60A5FA"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvWeeklyPercent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0%"
+                            android:textColor="#A78BFA"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/weeklyProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:progress="0"
+                        app:indicatorColor="#A78BFA"
+                        app:trackColor="#1F2937"
+                        app:trackThickness="10dp" />
+
+                    <!-- 7-Day Bar Chart (built in Java) -->
+                    <LinearLayout
+                        android:id="@+id/llWeeklyChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
+                        android:layout_marginTop="14dp"
+                        android:orientation="horizontal" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="20dp"
+                        android:background="#1F2937" />
+
+                    <!-- ==================== HABITS BREAKDOWN ==================== -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="32dp"
-                        android:letterSpacing="0.1"
-                        android:text="DAILY CHECKLIST"
+                        android:layout_marginTop="16dp"
+                        android:letterSpacing="0.2"
+                        android:text="HABITS BREAKDOWN"
                         android:textColor="#60A5FA"
-                        android:textSize="12sp"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/llHabitsBreakdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="20dp"
+                        android:background="#1F2937" />
+
+                    <!-- ==================== DAILY CHECKLIST ==================== -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:letterSpacing="0.2"
+                        android:text="TODAY'S CHECKLIST"
+                        android:textColor="#60A5FA"
+                        android:textSize="11sp"
                         android:textStyle="bold" />
 
                     <LinearLayout
                         android:id="@+id/llHabitChecklist"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="10dp"
                         android:orientation="vertical" />
 
-                    <!-- Analysis Section -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnSelectHabit"
-                        style="@style/Widget.Material3.Button.TextButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:text="ANALYZE INDIVIDUAL HABITS"
-                        android:textColor="#A78BFA"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cvHabitDetail"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="16dp"
-                        android:visibility="gone"
-                        app:cardBackgroundColor="#111827"
-                        app:cardCornerRadius="4dp"
-                        app:strokeColor="#1F2937"
-                        app:strokeWidth="1dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            <TextView
-                                android:id="@+id/tvDetailName"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="#FFFFFF"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-
-                            <com.google.android.material.progressindicator.LinearProgressIndicator
-                                android:id="@+id/detailProgressBar"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="16dp"
-                                app:indicatorColor="#A78BFA"
-                                app:trackColor="#1F2937"
-                                app:trackThickness="8dp" />
-
-                            <TextView
-                                android:id="@+id/tvDetailPercentage"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:textColor="#A78BFA"
-                                android:textSize="13sp" />
-
-                            <GridLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="20dp"
-                                android:columnCount="2">
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_columnWeight="1"
-                                    android:orientation="vertical">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="START DATE"
-                                        android:textColor="#9CA3AF"
-                                        android:textSize="10sp"
-                                        android:textStyle="bold" />
-                                    <TextView
-                                        android:id="@+id/tvDetailStart"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="2dp"
-                                        android:textColor="#FFFFFF"
-                                        android:textSize="14sp" />
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_columnWeight="1"
-                                    android:orientation="vertical">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="TARGET END"
-                                        android:textColor="#9CA3AF"
-                                        android:textSize="10sp"
-                                        android:textStyle="bold" />
-                                    <TextView
-                                        android:id="@+id/tvDetailEnd"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="2dp"
-                                        android:textColor="#FFFFFF"
-                                        android:textSize="14sp" />
-                                </LinearLayout>
-                            </GridLayout>
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnResetHabit"
-                                style="@style/Widget.Material3.Button.TextButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="end"
-                                android:layout_marginTop="12dp"
-                                android:text="RESET HABIT"
-                                android:textColor="#EF4444"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
-            </ScrollView>
+            </androidx.core.widget.NestedScrollView>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -411,6 +533,6 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -132,7 +132,6 @@ public class Profile extends AppCompatActivity {
         tvFollowingCount = findViewById(R.id.tvFollowingCount);
         tvFollowerCount = findViewById(R.id.tvFollowerCount);
         tvPostCount = findViewById(R.id.tvPostCount);
-        tvLevelDisplay = findViewById(R.id.tvLevelDisplay);
         tvUserHeaderName = findViewById(R.id.tvUserHeaderName);
         btnFollow = findViewById(R.id.btnFollow);
         llHabitsList = findViewById(R.id.llHabitsList);
@@ -153,7 +152,7 @@ public class Profile extends AppCompatActivity {
             ivProfile.setOnClickListener(v -> pickMedia.launch(new PickVisualMediaRequest.Builder()
                     .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                     .build()));
-            btnFollow.setOnClickListener(v -> Toast.makeText(this, "Edit Bio coming soon", Toast.LENGTH_SHORT).show());
+            btnFollow.setOnClickListener(v -> showEditBioDialog());
         } else {
             btnFollow.setOnClickListener(v -> handleFollowUnfollow());
         }
@@ -167,7 +166,19 @@ public class Profile extends AppCompatActivity {
                 UserModel user = doc.toObject(UserModel.class);
                 if (user != null) {
                     tvName.setText(user.getUsername());
-                    tvLevelDisplay.setText("LVL : " + (user.getOverallProgress() / 10 + 1));
+
+                    // Display bio — show placeholder only for own empty profile
+                    String bio = user.getBio();
+                    if (bio != null && !bio.isEmpty()) {
+                        tvDescription.setText(bio);
+                        tvDescription.setVisibility(View.VISIBLE);
+                    } else if (isOwnProfile) {
+                        tvDescription.setText("Tap EDIT BIO to add your bio.");
+                        tvDescription.setVisibility(View.VISIBLE);
+                    } else {
+                        tvDescription.setVisibility(View.GONE);
+                    }
+
                     String encodedImage = user.getProfileImageBase64();
                     if (encodedImage != null && !encodedImage.isEmpty()) {
                         try {
@@ -181,7 +192,7 @@ public class Profile extends AppCompatActivity {
 
                     List<String> following = user.getFollowing();
                     tvFollowingCount.setText(String.valueOf(following != null ? following.size() : 0));
-                    
+
                     if (!isOwnProfile) {
                         checkIfFollowing();
                     }
@@ -282,6 +293,53 @@ public class Profile extends AppCompatActivity {
             clearDialogRefs();
             dialog.dismiss();
             postHabitActivity(habit, caption, imageBase64);
+        });
+
+        dialog.show();
+    }
+
+    private void showEditBioDialog() {
+        if (!isOwnProfile || currentUser == null) return;
+
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_edit_bio, null);
+        EditText etBio = dialogView.findViewById(R.id.etBioInput);
+        View btnCancel = dialogView.findViewById(R.id.btnBioCancel);
+        View btnSave = dialogView.findViewById(R.id.btnBioSave);
+
+        // Pre-fill with current bio if set
+        String currentBio = tvDescription.getText().toString();
+        if (!currentBio.equals("Tap EDIT BIO to add your bio.")) {
+            etBio.setText(currentBio);
+            etBio.setSelection(currentBio.length());
+        }
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnSave.setOnClickListener(v -> {
+            String newBio = etBio.getText() != null ? etBio.getText().toString().trim() : "";
+            String email = currentUser.getEmail().toLowerCase().trim();
+
+            mDB.collection("Users").document(email)
+                    .update("bio", newBio)
+                    .addOnSuccessListener(aVoid -> {
+                        if (newBio.isEmpty()) {
+                            tvDescription.setText("Tap EDIT BIO to add your bio.");
+                        } else {
+                            tvDescription.setText(newBio);
+                        }
+                        tvDescription.setVisibility(View.VISIBLE);
+                        dialog.dismiss();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, "Failed to save bio", Toast.LENGTH_SHORT).show());
         });
 
         dialog.show();
