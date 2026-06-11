@@ -98,7 +98,7 @@ public class LoginMenu extends AppCompatActivity {
                                     finish();
                                 } else {
                                     // Login failure error
-                                    Toast.makeText(LoginMenu.this, "Login Failed: " + task.getException().getMessage(),
+                                    Toast.makeText(LoginMenu.this, "Login Failed: You have no account yet.",
                                             Toast.LENGTH_SHORT).show();
                                 }
                             }

@@ -53,6 +53,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginTop="2dp"
                 android:src="@android:drawable/ic_dialog_info"
                 app:tint="@color/baby_blue" />
 
@@ -60,6 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
                 android:letterSpacing="0.1"
                 android:text="SYSTEM INTERFACE"
                 android:textColor="@color/baby_blue"
@@ -179,6 +181,7 @@
                     android:textColor="@color/white"
                     app:cornerRadius="4dp"
                     app:icon="@android:drawable/ic_menu_today"
+                    app:iconSize="32dp"
                     app:iconGravity="top"
                     app:iconTint="@color/purple_200"
                     app:strokeColor="@color/baby_blue" />
@@ -193,6 +196,7 @@
                     android:textColor="@color/white"
                     app:cornerRadius="4dp"
                     app:icon="@android:drawable/ic_menu_myplaces"
+                    app:iconSize="32dp"
                     app:iconGravity="top"
                     app:iconTint="#FFFFFF"
                     app:strokeColor="@color/baby_blue" />
@@ -208,6 +212,7 @@
                     app:cornerRadius="4dp"
                     app:icon="@android:drawable/ic_menu_sort_by_size"
                     app:iconGravity="top"
+                    app:iconSize="32dp"
                     app:iconTint="#E02D03"
                     app:strokeColor="@color/baby_blue" />
 
@@ -236,6 +241,7 @@
                     android:textColor="@color/white"
                     app:cornerRadius="4dp"
                     app:icon="@android:drawable/ic_menu_search"
+                    app:iconSize="32dp"
                     app:iconGravity="top"
                     app:iconTint="#0363FF"
                     app:strokeColor="@color/baby_blue" />
@@ -250,6 +256,7 @@
                     android:textColor="@color/white"
                     app:cornerRadius="4dp"
                     app:icon="@drawable/outline_crown_24"
+                    app:iconSize="32dp"
                     app:iconGravity="top"
                     app:iconTint="#FFEB3B"
                     app:strokeColor="@color/baby_blue" />
@@ -265,6 +272,7 @@
                     app:cornerRadius="4dp"
                     app:icon="@drawable/outline_cyclone_24"
                     app:iconGravity="top"
+                    app:iconSize="32dp"
                     app:iconTint="#FF8102"
                     app:strokeColor="@color/baby_blue" />
 
@@ -275,7 +283,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:alpha="0.4"
             android:text="[ SYSTEM OVERRIDE ACTIVE ]"
             android:textColor="@color/baby_blue"

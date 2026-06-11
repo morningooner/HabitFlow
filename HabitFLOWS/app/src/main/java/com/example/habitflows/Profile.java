@@ -9,6 +9,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,9 +34,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +46,7 @@ import java.util.Map;
 public class Profile extends AppCompatActivity {
 
     private ImageView ivProfile;
-    private TextView tvName, tvDescription, tvFollowingCount, tvFollowerCount, tvPostCount, tvLevelDisplay, tvUserHeaderName;
+    private TextView tvName, tvDescription, tvFollowingCount, tvFollowerCount, tvPostCount, tvUserHeaderName;
     private MaterialButton btnFollow;
     private LinearLayout llHabitsList;
     
@@ -113,7 +116,12 @@ public class Profile extends AppCompatActivity {
 
         initViews();
         setupListeners();
-        loadProfileData();
+        
+        if (isOwnProfile) {
+            checkAndResetHabits();
+        } else {
+            loadProfileData();
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -123,6 +131,31 @@ public class Profile extends AppCompatActivity {
 
         // Run the "Solo Leveling" System Entrance Animation
         SystemEntranceAnim.applySystemEntranceAnimation(topBar, profileWindow, bottomIcons);
+    }
+
+    private void checkAndResetHabits() {
+        if (currentUser == null || currentUser.getEmail() == null) return;
+        String email = currentUser.getEmail().toLowerCase().trim();
+        String today = LocalDate.now().toString();
+
+        mDB.collection("Users").document(email).get().addOnSuccessListener(doc -> {
+            if (doc.exists()) {
+                UserModel user = doc.toObject(UserModel.class);
+                if (user != null && !today.equals(user.getLastHabitResetDate())) {
+                    // Reset all habits for today
+                    mDB.collection("Users").document(email).collection("Habits").get().addOnSuccessListener(query -> {
+                        WriteBatch batch = mDB.batch();
+                        for (DocumentSnapshot habitDoc : query.getDocuments()) {
+                            batch.update(habitDoc.getReference(), "todayCompleted", false);
+                        }
+                        batch.update(mDB.collection("Users").document(email), "lastHabitResetDate", today);
+                        batch.commit().addOnSuccessListener(aVoid -> loadProfileData());
+                    });
+                } else {
+                    loadProfileData();
+                }
+            }
+        });
     }
 
     private void initViews() {
@@ -219,6 +252,7 @@ public class Profile extends AppCompatActivity {
         TextView tvHabitName = habitView.findViewById(R.id.tvHabitName);
         TextView tvDuration = habitView.findViewById(R.id.tvHabitDuration);
         TextView tvPercentage = habitView.findViewById(R.id.tvHabitPercentage);
+        CheckBox cbHabitDone = habitView.findViewById(R.id.cbHabitDone);
         View btnEdit = habitView.findViewById(R.id.btnEditHabit);
         View btnDelete = habitView.findViewById(R.id.btnDeleteHabit);
         View btnPost = habitView.findViewById(R.id.btnPostHabit);
@@ -235,10 +269,12 @@ public class Profile extends AppCompatActivity {
         }
 
         tvHabitName.setText(habit.getHabitName());
-        String durationText = habit.getCompletedDays() + " / " + habit.getDuration() + " " + habit.getUnit();
+        String durationText = habit.getDuration() + " Minutes ";
         tvDuration.setText(durationText);
         
-        int progress = (int) ((habit.getCompletedDays() / (float) habit.getDuration()) * 100);
+        // Progress is 100% if completed today, 0% otherwise
+        int progress = habit.isTodayCompleted() ? 100 : 0;
+        cbHabitDone.setChecked(habit.isTodayCompleted());
         tvPercentage.setText(progress + "%");
         
         com.google.android.material.progressindicator.LinearProgressIndicator progressIndicator = 
@@ -360,8 +396,9 @@ public class Profile extends AppCompatActivity {
             if (doc.exists()) {
                 UserModel user = doc.toObject(UserModel.class);
                 if (user != null) {
-                    int progress = (int) ((habit.getCompletedDays() / (float) habit.getDuration()) * 100);
-                    String durationText = habit.getCompletedDays() + " / " + habit.getDuration() + " " + habit.getUnit();
+                    // Progress is 100% if completed today
+                    int progress = habit.isTodayCompleted() ? 100 : 0;
+                    String durationText = habit.isTodayCompleted() ? "Finished" : "Not Finished";
 
                     ActivityModel activity = new ActivityModel(
                             currentUser.getUid(),

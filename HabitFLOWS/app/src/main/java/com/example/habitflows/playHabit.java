@@ -83,6 +83,7 @@ public class playHabit extends AppCompatActivity {
         btnResetTimer.setOnClickListener(v -> resetTimer());
 
         loadHabitsFromFirestore();
+        updatePlayButtonState(); // Initial check
 
         SystemEntranceAnim.applySystemEntranceAnimation(btnBackPlay, playContainer, tvHabitPlayName);
     }
@@ -100,6 +101,7 @@ public class playHabit extends AppCompatActivity {
 
         updateCountDownText();
         updateProgressBar();
+        updatePlayButtonState();
 
         if (timerRunning) {
             endTime = prefs.getLong("endTime", 0);
@@ -112,7 +114,7 @@ public class playHabit extends AppCompatActivity {
                 updateProgressBar();
                 
                 // If it finished while we were away, record progress
-                if (!savedHabit.equals("Focus Session") && !savedHabit.equals("Choose Habit")) {
+                if (!savedHabit.equals("Focus Session") && !savedHabit.equals("Choose Habit") && !savedHabit.equals("QUEST TIMER")) {
                     saveHabitProgress(savedHabit);
                 }
                 clearTimerPrefs();
@@ -173,7 +175,15 @@ public class playHabit extends AppCompatActivity {
                     tvHabitPlayName.setText(habit.getHabitName());
                     mStartTimeInMillis = (long) habit.getDuration() * 60000;
                     resetTimer();
+                    updatePlayButtonState();
                 }).show();
+    }
+
+    private void updatePlayButtonState() {
+        String currentHabit = tvHabitPlayName.getText().toString();
+        boolean isHabitSelected = !currentHabit.equals("Focus Session") && !currentHabit.equals("Choose Habit") && !currentHabit.equals("QUEST TIMER");
+        btnPlayPause.setEnabled(isHabitSelected);
+        btnPlayPause.setAlpha(isHabitSelected ? 1.0f : 0.5f);
     }
 
     private void startTimer() {
@@ -214,7 +224,7 @@ public class playHabit extends AppCompatActivity {
     }
 
     private void saveHabitProgress(String habitName) {
-        if (habitName.equals("Focus Session") || habitName.equals("Choose Habit")) return;
+        if (habitName.equals("Focus Session") || habitName.equals("Choose Habit") || habitName.equals("QUEST TIMER")) return;
 
         if (mAuth.getCurrentUser() == null) return;
 

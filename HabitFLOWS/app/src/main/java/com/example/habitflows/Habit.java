@@ -20,8 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -63,8 +65,8 @@ public class Habit extends AppCompatActivity {
             return insets;
         });
 
-        // Listen for habit changes in real-time
-        listenForHabits();
+        // Check for daily reset before listening
+        checkAndResetHabits();
 
         btnBackProfile.setOnClickListener(v -> {
             startActivity(new Intent(Habit.this, MainMenu.class));
@@ -78,11 +80,39 @@ public class Habit extends AppCompatActivity {
         SystemEntranceAnim.applySystemEntranceAnimation(btnBackProfile, notificationContainer, fabAddHabit);
     }
 
+    private void checkAndResetHabits() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null || user.getEmail() == null) return;
+        String email = user.getEmail().toLowerCase().trim();
+        String today = LocalDate.now().toString();
+
+        mDB.collection("Users").document(email).get().addOnSuccessListener(doc -> {
+            if (doc.exists()) {
+                UserModel userModel = doc.toObject(UserModel.class);
+                if (userModel != null && !today.equals(userModel.getLastHabitResetDate())) {
+                    mDB.collection("Users").document(email).collection("Habits").get().addOnSuccessListener(query -> {
+                        WriteBatch batch = mDB.batch();
+                        for (DocumentSnapshot habitDoc : query.getDocuments()) {
+                            batch.update(habitDoc.getReference(), "todayCompleted", false);
+                        }
+                        batch.update(mDB.collection("Users").document(email), "lastHabitResetDate", today);
+                        batch.commit().addOnSuccessListener(aVoid -> listenForHabits());
+                    }).addOnFailureListener(e -> listenForHabits());
+                } else {
+                    listenForHabits();
+                }
+            } else {
+                listenForHabits();
+            }
+        }).addOnFailureListener(e -> listenForHabits());
+    }
+
     private void listenForHabits() {
-        if (mAuth.getCurrentUser() == null) return;
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null || user.getEmail() == null) return;
 
         mDB.collection("Users")
-                .document(mAuth.getCurrentUser().getEmail())
+                .document(user.getEmail())
                 .collection("Habits")
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
@@ -104,8 +134,9 @@ public class Habit extends AppCompatActivity {
     }
 
     private void updateHabitStatus(HabitModel habit, boolean isCompleted) {
-        if (mAuth.getCurrentUser() == null) return;
-        String email = mAuth.getCurrentUser().getEmail();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null || user.getEmail() == null) return;
+        String email = user.getEmail();
 
         mDB.collection("Users").document(email)
                 .collection("Habits").document(habit.getHabitName())
@@ -118,13 +149,14 @@ public class Habit extends AppCompatActivity {
     }
 
     private void checkAllHabitsCompleted() {
-        if (mAuth.getCurrentUser() == null) return;
-        String email = mAuth.getCurrentUser().getEmail();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null || user.getEmail() == null) return;
+        String email = user.getEmail();
         String today = LocalDate.now().toString();
 
         mDB.collection("Users").document(email).get().addOnSuccessListener(userDoc -> {
-            UserModel user = userDoc.toObject(UserModel.class);
-            if (user != null && !today.equals(user.getLastStreakUpdateDate())) {
+            UserModel userModel = userDoc.toObject(UserModel.class);
+            if (userModel != null && !today.equals(userModel.getLastStreakUpdateDate())) {
                 
                 mDB.collection("Users").document(email).collection("Habits").get().addOnSuccessListener(query -> {
                     boolean allDone = true;
@@ -137,12 +169,10 @@ public class Habit extends AppCompatActivity {
                     }
 
                     if (allDone && !query.isEmpty()) {
-                        int newStreak = user.getStreak() + 1;
+                        int newStreak = userModel.getStreak() + 1;
                         mDB.collection("Users").document(email)
                                 .update("streak", newStreak, "lastStreakUpdateDate", today)
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(this, "CONGRATULATIONS! Daily streak updated to " + newStreak + "!", Toast.LENGTH_LONG).show();
-                                });
+                                .addOnSuccessListener(aVoid -> Toast.makeText(this, "CONGRATULATIONS! Daily streak updated to " + newStreak + "!", Toast.LENGTH_LONG).show());
                     }
                 });
             }
@@ -173,9 +203,12 @@ public class Habit extends AppCompatActivity {
     }
 
     private void saveHabit(String name, int duration) {
-        HabitModel habit = new HabitModel(name, duration, "Days");
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null || user.getEmail() == null) return;
+
+        HabitModel habit = new HabitModel(name, duration, "Minutes");
         mDB.collection("Users")
-                .document(mAuth.getCurrentUser().getEmail())
+                .document(user.getEmail())
                 .collection("Habits")
                 .document(name)
                 .set(habit)
@@ -210,7 +243,9 @@ public class Habit extends AppCompatActivity {
     }
 
     private void updateHabitInFirebase(HabitModel oldHabit, String newName, int newDuration) {
-        String userEmail = mAuth.getCurrentUser().getEmail();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null || user.getEmail() == null) return;
+        String userEmail = user.getEmail();
         
         if (!oldHabit.getHabitName().equals(newName)) {
             mDB.collection("Users").document(userEmail).collection("Habits").document(oldHabit.getHabitName()).delete();
@@ -235,8 +270,11 @@ public class Habit extends AppCompatActivity {
                 .setTitle("Delete Habit")
                 .setMessage("Are you sure you want to delete '" + habit.getHabitName() + "'?")
                 .setPositiveButton("Delete", (dialog, which) -> {
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    if (user == null || user.getEmail() == null) return;
+
                     mDB.collection("Users")
-                            .document(mAuth.getCurrentUser().getEmail())
+                            .document(user.getEmail())
                             .collection("Habits")
                             .document(habit.getHabitName())
                             .delete()

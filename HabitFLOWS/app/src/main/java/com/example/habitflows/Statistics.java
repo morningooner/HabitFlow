@@ -323,7 +323,7 @@ public class Statistics extends AppCompatActivity {
             tvName.setText(habit.getHabitName());
             tvPercent.setText(progress + "%");
             bar.setProgress(progress, true);
-            tvDuration.setText(habit.getCompletedDays() + " / " + habit.getDuration() + " " + habit.getUnit());
+            tvDuration.setText(habit.getDuration() + " Minutes");
 
             btnReset.setOnClickListener(v -> confirmResetHabit(habit));
 

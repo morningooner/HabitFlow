@@ -18,7 +18,7 @@
             android:id="@+id/etEditHabitName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black" />
+            android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
-            android:textColor="@color/black" />
+            android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>

@@ -42,7 +42,7 @@ public class SystemEntranceAnim {
                         // Phase 3: Morphing Burst (Vertical expansion from center)
                         container.animate()
                                 .scaleY(1f)
-                                .setDuration(1200)
+                                .setDuration(800)
                                 .setInterpolator(new AnticipateOvershootInterpolator(1.2f))
                                 .withEndAction(() -> {
                                     // Phase 4: Staggered Digital Render (Scan effect)
@@ -54,7 +54,7 @@ public class SystemEntranceAnim {
                                 .start();
                     })
                     .start();
-        }, 600);
+        }, 300);
     }
 
     private static void setChildrenAlphaRecursive(ViewGroup parent, float alpha) {
@@ -80,7 +80,7 @@ public class SystemEntranceAnim {
                     .setInterpolator(new DecelerateInterpolator())
                     .start();
 
-            currentDelay += 80;
+            currentDelay += 20;
 
             if (child instanceof ViewGroup && !(child instanceof Button)) {
                 currentDelay = animateChildrenCascading((ViewGroup) child, currentDelay);

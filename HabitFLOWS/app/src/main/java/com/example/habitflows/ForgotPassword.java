@@ -50,7 +50,7 @@ public class ForgotPassword extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(ForgotPassword.this, "Reset link sent.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ForgotPassword.this, "Reset link sent. Please check your spam folder.", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(ForgotPassword.this, "Error detected.", Toast.LENGTH_SHORT).show();
                         }
