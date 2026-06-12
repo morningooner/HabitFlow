@@ -26,6 +26,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -39,10 +40,12 @@ public class Statistics extends AppCompatActivity {
     private FirebaseFirestore mDB;
 
     // Top bar
-    private TextView tvLevelDisplay, tvUserHeaderName;
+    private TextView tvUserHeaderName;
 
     // Identity row
-    private TextView tvRpgName, tvRpgLv, tvCompletedHabitsCount, tvRankLetter;
+    private TextView tvRpgName, tvCompletedHabitsCount, tvRankLetter;
+
+    private ListenerRegistration habitsListener;
 
     // Overall
     private CircularProgressIndicator cpOverall;
@@ -132,8 +135,6 @@ public class Statistics extends AppCompatActivity {
 
             if (tvRpgName != null) tvRpgName.setText("NAME: " + name);
             if (tvUserHeaderName != null) tvUserHeaderName.setText(name);
-            if (tvRpgLv != null) tvRpgLv.setText("LV: " + level);
-            if (tvLevelDisplay != null) tvLevelDisplay.setText("LVL : " + level);
             if (tvRankLetter != null) tvRankLetter.setText(user.getRank());
         });
     }
@@ -142,20 +143,28 @@ public class Statistics extends AppCompatActivity {
         if (mAuth.getCurrentUser() == null) return;
         String email = mAuth.getCurrentUser().getEmail();
 
-        mDB.collection("Users").document(email).collection("Habits")
-                .get()
-                .addOnSuccessListener(query -> {
+        if (habitsListener != null) habitsListener.remove();
+
+        habitsListener = mDB.collection("Users").document(email).collection("Habits")
+                .addSnapshotListener((snapshots, error) -> {
+                    if (error != null || snapshots == null) return;
                     habitList.clear();
-                    for (DocumentSnapshot doc : query.getDocuments()) {
+                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
                         try {
                             HabitModel h = doc.toObject(HabitModel.class);
                             if (h != null) habitList.add(h);
-                        } catch (Exception e) {
-                            Log.e("Statistics", "Error parsing habit", e);
+                        } catch (Exception ex) {
+                            Log.e("Statistics", "Error parsing habit", ex);
                         }
                     }
                     renderAllStats();
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (habitsListener != null) habitsListener.remove();
     }
 
     private void renderAllStats() {
@@ -176,21 +185,21 @@ public class Statistics extends AppCompatActivity {
         // Daily %
         int dailyPercent = (totalHabits > 0) ? (completedToday * 100 / totalHabits) : 0;
 
-        // Weekly avg (estimated: completedDays / daysSinceStart * 7, capped at 7, averaged)
-        float weeklyDaysSum = 0;
-        int weeklyCount = 0;
+        // Weekly: count distinct days this week (Mon–Sun) where at least one habit was completed
+        LocalDate monday = LocalDate.now().with(DayOfWeek.MONDAY);
+        boolean[] weekDaysCompleted = new boolean[7];
         for (HabitModel h : habitList) {
-            if (h.getStartDate() == null) continue;
-            try {
-                LocalDate start = LocalDate.parse(h.getStartDate().split("T")[0]);
-                long daysSince = Math.max(1, ChronoUnit.DAYS.between(start, LocalDate.now()) + 1);
-                float daysPerWeek = Math.min((h.getCompletedDays() * 7f) / daysSince, 7f);
-                weeklyDaysSum += daysPerWeek;
-                weeklyCount++;
-            } catch (Exception ignored) {}
+            for (String dateStr : h.getCompletedDates()) {
+                try {
+                    LocalDate d = LocalDate.parse(dateStr);
+                    long offset = ChronoUnit.DAYS.between(monday, d);
+                    if (offset >= 0 && offset < 7) weekDaysCompleted[(int) offset] = true;
+                } catch (Exception ignored) {}
+            }
         }
-        float avgDaysPerWeek = (weeklyCount > 0) ? weeklyDaysSum / weeklyCount : 0;
-        int weeklyPercent = (int) Math.min(avgDaysPerWeek / 7f * 100, 100);
+        int weeklyDaysCount = 0;
+        for (boolean b : weekDaysCompleted) if (b) weeklyDaysCount++;
+        int weeklyPercent = (int) (weeklyDaysCount / 7.0 * 100);
 
         // --- Update Overall Ring ---
         if (cpOverall != null) cpOverall.setProgress(overallPercent, true);
@@ -200,6 +209,9 @@ public class Statistics extends AppCompatActivity {
         if (tvChipHabits != null) tvChipHabits.setText(String.valueOf(totalHabits));
         if (tvChipToday != null) tvChipToday.setText(dailyPercent + "%");
         if (tvChipWeekly != null) tvChipWeekly.setText(weeklyPercent + "%");
+
+        // --- Weekly label (X / 7 days) ---
+        if (tvWeeklyPercent != null) tvWeeklyPercent.setText(weeklyDaysCount + " / 7 days");
 
         // --- Update Active Habits Count ---
         if (tvCompletedHabitsCount != null) tvCompletedHabitsCount.setText("ACTIVE: " + totalHabits);
@@ -211,10 +223,9 @@ public class Statistics extends AppCompatActivity {
 
         // --- Weekly Progress ---
         if (weeklyProgressBar != null) weeklyProgressBar.setProgress(weeklyPercent, true);
-        if (tvWeeklyPercent != null) tvWeeklyPercent.setText(weeklyPercent + "%");
 
         // --- Weekly Bar Chart ---
-        buildWeeklyChart(dailyPercent, weeklyPercent);
+        buildWeeklyChart(weekDaysCompleted);
 
         // --- Habits Breakdown ---
         buildHabitsBreakdown();
@@ -229,7 +240,7 @@ public class Statistics extends AppCompatActivity {
         }
     }
 
-    private void buildWeeklyChart(int dailyPercent, int weeklyPercent) {
+    private void buildWeeklyChart(boolean[] weekDaysCompleted) {
         if (llWeeklyChart == null) return;
         llWeeklyChart.removeAllViews();
 
@@ -240,6 +251,10 @@ public class Statistics extends AppCompatActivity {
         int maxBarPx = (int) (72 * density);
 
         for (int i = 0; i < 7; i++) {
+            boolean completed = weekDaysCompleted[i];
+            boolean isToday = (i == todayIndex);
+            boolean isFuture = (i > todayIndex);
+
             LinearLayout column = new LinearLayout(this);
             LinearLayout.LayoutParams colParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
             colParams.setMargins((int)(3 * density), 0, (int)(3 * density), 0);
@@ -249,26 +264,25 @@ public class Statistics extends AppCompatActivity {
 
             // Bar container
             FrameLayout barContainer = new FrameLayout(this);
-            LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, maxBarPx);
-            barContainer.setLayoutParams(containerParams);
+            barContainer.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, maxBarPx));
 
-            // Background (track)
+            // Background track
             View bgView = new View(this);
             bgView.setLayoutParams(new FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-            bgView.setBackgroundColor(Color.parseColor("#1F2937"));
+            bgView.setBackgroundColor(Color.parseColor(isFuture ? "#111827" : "#1F2937"));
             barContainer.addView(bgView);
 
-            // Only fill today's bar with actual data — no estimates for other days
-            if (i == todayIndex && dailyPercent > 0) {
+            // Fill — only when day was actually completed
+            if (completed) {
                 View fillView = new View(this);
-                int fillHeight = Math.max((int)(maxBarPx * (dailyPercent / 100f)), (int)(4 * density));
                 FrameLayout.LayoutParams fillParams = new FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.MATCH_PARENT, fillHeight);
+                        FrameLayout.LayoutParams.MATCH_PARENT, maxBarPx);
                 fillParams.gravity = Gravity.BOTTOM;
                 fillView.setLayoutParams(fillParams);
-                fillView.setBackgroundColor(Color.parseColor("#3B82F6"));
+                // Today = bright blue, past days = slightly muted blue
+                fillView.setBackgroundColor(Color.parseColor(isToday ? "#3B82F6" : "#1D4ED8"));
                 barContainer.addView(fillView);
             }
 
@@ -282,11 +296,13 @@ public class Statistics extends AppCompatActivity {
             dayLabel.setLayoutParams(labelParams);
             dayLabel.setText(labels[i]);
             dayLabel.setTextSize(9);
-            if (i == todayIndex) {
+            if (isToday) {
                 dayLabel.setTextColor(Color.parseColor("#3B82F6"));
                 dayLabel.setTypeface(null, android.graphics.Typeface.BOLD);
+            } else if (isFuture) {
+                dayLabel.setTextColor(Color.parseColor("#374151"));
             } else {
-                dayLabel.setTextColor(Color.parseColor("#4B5563"));
+                dayLabel.setTextColor(Color.parseColor("#6B7280"));
             }
             column.addView(dayLabel);
 
@@ -323,7 +339,7 @@ public class Statistics extends AppCompatActivity {
             tvName.setText(habit.getHabitName());
             tvPercent.setText(progress + "%");
             bar.setProgress(progress, true);
-            tvDuration.setText(habit.getDuration() + " Minutes");
+            tvDuration.setText(habit.getCompletedDays() + " / " + habit.getDuration() + " " + habit.getUnit());
 
             btnReset.setOnClickListener(v -> confirmResetHabit(habit));
 
@@ -352,61 +368,22 @@ public class Statistics extends AppCompatActivity {
             TextView tvStatus = row.findViewById(R.id.tvCheckStatus);
 
             tvName.setText(habit.getHabitName());
-            updateChecklistRowVisuals(dot, tvStatus, habit.isTodayCompleted());
 
-            row.setOnClickListener(v -> {
-                boolean newState = !habit.isTodayCompleted();
-                toggleHabitCompletion(habit, newState, dot, tvStatus);
-            });
+            // Apply visuals directly here
+            boolean completed = habit.isTodayCompleted();
+            GradientDrawable circle = new GradientDrawable();
+            circle.setShape(GradientDrawable.OVAL);
+            circle.setColor(completed ? Color.parseColor("#4ADE80") : Color.parseColor("#374151"));
+            dot.setBackground(circle);
+            tvStatus.setText(completed ? "DONE" : "PENDING");
+            tvStatus.setTextColor(completed ? Color.parseColor("#4ADE80") : Color.parseColor("#4B5563"));
+
+            // Read-only — checklist auto-updates via Firestore real-time listener
 
             llHabitChecklist.addView(row);
         }
     }
 
-    private void updateChecklistRowVisuals(View dot, TextView tvStatus, boolean completed) {
-        GradientDrawable circle = new GradientDrawable();
-        circle.setShape(GradientDrawable.OVAL);
-        circle.setColor(completed ? Color.parseColor("#4ADE80") : Color.parseColor("#374151"));
-        dot.setBackground(circle);
-
-        tvStatus.setText(completed ? "DONE" : "PENDING");
-        tvStatus.setTextColor(completed ? Color.parseColor("#4ADE80") : Color.parseColor("#4B5563"));
-    }
-
-    private void toggleHabitCompletion(HabitModel habit, boolean newState, View dot, TextView tvStatus) {
-        if (mAuth.getCurrentUser() == null || habit.getHabitName() == null) return;
-        String email = mAuth.getCurrentUser().getEmail();
-
-        mDB.collection("Users").document(email).collection("Habits")
-                .document(habit.getHabitName())
-                .update("todayCompleted", newState)
-                .addOnSuccessListener(aVoid -> {
-                    habit.setTodayCompleted(newState);
-                    updateChecklistRowVisuals(dot, tvStatus, newState);
-                    // Refresh stats without rebuilding everything
-                    refreshProgressStats();
-                });
-    }
-
-    private void refreshProgressStats() {
-        int totalHabits = habitList.size();
-        int totalCompleted = 0, totalDuration = 0, completedToday = 0;
-        for (HabitModel h : habitList) {
-            totalCompleted += h.getCompletedDays();
-            totalDuration += h.getDuration();
-            if (h.isTodayCompleted()) completedToday++;
-        }
-
-        int overallPercent = (totalDuration > 0) ? (int) ((totalCompleted * 100f) / totalDuration) : 0;
-        int dailyPercent = (totalHabits > 0) ? (completedToday * 100 / totalHabits) : 0;
-
-        if (cpOverall != null) cpOverall.setProgress(overallPercent, true);
-        if (tvOverallPercent != null) tvOverallPercent.setText(overallPercent + "%");
-        if (tvChipToday != null) tvChipToday.setText(dailyPercent + "%");
-        if (dailyProgressBar != null) dailyProgressBar.setProgress(dailyPercent, true);
-        if (tvDailyPercent != null) tvDailyPercent.setText(dailyPercent + "%");
-        if (tvDailyLabel != null) tvDailyLabel.setText(completedToday + " / " + totalHabits + " habits completed today");
-    }
 
     private void confirmResetHabit(HabitModel habit) {
         if (mAuth.getCurrentUser() == null || habit.getHabitName() == null) return;

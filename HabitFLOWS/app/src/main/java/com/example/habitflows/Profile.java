@@ -46,7 +46,7 @@ import java.util.Map;
 public class Profile extends AppCompatActivity {
 
     private ImageView ivProfile;
-    private TextView tvName, tvDescription, tvFollowingCount, tvFollowerCount, tvPostCount, tvUserHeaderName;
+    private TextView tvName, tvDescription, tvStreakProfile, tvFollowingCount, tvPostCount, tvUserHeaderName, tvFollowerCount;
     private MaterialButton btnFollow;
     private LinearLayout llHabitsList;
     
@@ -116,7 +116,7 @@ public class Profile extends AppCompatActivity {
 
         initViews();
         setupListeners();
-        
+
         if (isOwnProfile) {
             checkAndResetHabits();
         } else {
@@ -166,6 +166,7 @@ public class Profile extends AppCompatActivity {
         tvFollowerCount = findViewById(R.id.tvFollowerCount);
         tvPostCount = findViewById(R.id.tvPostCount);
         tvUserHeaderName = findViewById(R.id.tvUserHeaderName);
+        tvStreakProfile = findViewById(R.id.tvStreakProfile);
         btnFollow = findViewById(R.id.btnFollow);
         llHabitsList = findViewById(R.id.llHabitsList);
         ImageView ivBack = findViewById(R.id.ivBack);
@@ -222,6 +223,8 @@ public class Profile extends AppCompatActivity {
                             ivProfile.setImageResource(R.drawable.profilepic);
                         }
                     }
+
+                    tvStreakProfile.setText(String.valueOf(user.getStreak()));
 
                     List<String> following = user.getFollowing();
                     tvFollowingCount.setText(String.valueOf(following != null ? following.size() : 0));

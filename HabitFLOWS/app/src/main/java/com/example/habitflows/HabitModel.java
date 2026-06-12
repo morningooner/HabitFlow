@@ -1,6 +1,8 @@
 package com.example.habitflows;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HabitModel {
     private String habitName;
@@ -8,7 +10,8 @@ public class HabitModel {
     private String unit;
     private String startDate;
     private int completedDays;
-    private boolean isTodayCompleted; // Field for checklist status
+    private boolean isTodayCompleted;
+    private List<String> completedDates = new ArrayList<>();
 
     public HabitModel() {}
 
@@ -19,6 +22,7 @@ public class HabitModel {
         this.startDate = LocalDate.now().toString();
         this.completedDays = 0;
         this.isTodayCompleted = false;
+        this.completedDates = new ArrayList<>();
     }
 
     public String getHabitName() { return habitName; }
@@ -38,4 +42,7 @@ public class HabitModel {
 
     public boolean isTodayCompleted() { return isTodayCompleted; }
     public void setTodayCompleted(boolean todayCompleted) { isTodayCompleted = todayCompleted; }
+
+    public List<String> getCompletedDates() { return completedDates != null ? completedDates : new ArrayList<>(); }
+    public void setCompletedDates(List<String> completedDates) { this.completedDates = completedDates != null ? completedDates : new ArrayList<>(); }
 }

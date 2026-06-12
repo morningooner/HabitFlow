@@ -224,28 +224,42 @@ public class playHabit extends AppCompatActivity {
     }
 
     private void saveHabitProgress(String habitName) {
+        if (habitName.equals("Focus Session") || habitName.equals("Choose Habit")) return;
         if (habitName.equals("Focus Session") || habitName.equals("Choose Habit") || habitName.equals("QUEST TIMER")) return;
 
         if (mAuth.getCurrentUser() == null) return;
 
         String userEmail = mAuth.getCurrentUser().getEmail();
 
-        // 1. Update the habit's completedDays and mark as todayCompleted
+        // Read the habit first to check if XP was already granted today
         mDB.collection("Users").document(userEmail)
                 .collection("Habits").document(habitName)
-                .update("completedDays", FieldValue.increment(1), "todayCompleted", true)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("PlayHabit", "Habit progress recorded: " + habitName);
-                    checkAllHabitsCompleted(); // Check if this was the last quest for the streak
-                });
+                .get()
+                .addOnSuccessListener(doc -> {
+                    HabitModel habit = doc.toObject(HabitModel.class);
+                    boolean alreadyDoneToday = habit != null && habit.isTodayCompleted();
 
-        // 2. Award +90 XP to the user (Adjusted from your code's increment(90))
-        mDB.collection("Users").document(userEmail)
-                .update("xp", FieldValue.increment(10))
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "QUEST COMPLETE! +10 XP earned.", Toast.LENGTH_LONG).show();
+                    if (!alreadyDoneToday) {
+                        // First completion today — increment days, mark done, record date, grant XP
+                        String today = LocalDate.now().toString();
+                        mDB.collection("Users").document(userEmail)
+                                .collection("Habits").document(habitName)
+                                .update("completedDays", FieldValue.increment(1),
+                                        "todayCompleted", true,
+                                        "completedDates", FieldValue.arrayUnion(today))
+                                .addOnSuccessListener(aVoid -> checkAllHabitsCompleted());
+
+                        mDB.collection("Users").document(userEmail)
+                                .update("xp", FieldValue.increment(10))
+                                .addOnSuccessListener(aVoid ->
+                                        Toast.makeText(this, "QUEST COMPLETE! +10 XP earned.", Toast.LENGTH_LONG).show());
+                    } else {
+                        // Already completed today — session recorded but no extra XP
+                        Toast.makeText(this, "Session complete! Habit already done today — no extra XP.", Toast.LENGTH_SHORT).show();
+                        checkAllHabitsCompleted();
+                    }
                 })
-                .addOnFailureListener(e -> Log.e("PlayHabit", "Error updating progress/XP", e));
+                .addOnFailureListener(e -> Log.e("PlayHabit", "Error reading habit", e));
     }
 
     private void checkAllHabitsCompleted() {

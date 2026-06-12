@@ -2,8 +2,14 @@ package com.example.habitflows;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +30,9 @@ import java.time.LocalDate;
 public class MainMenu extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mDB;
+
+    // Shown once per login session; reset on logout
+    private static boolean sWelcomeShown = false;
     private Button btnProfile, btnHabit, btnStatistics, btnPlayHabit, btnLeaderboard, btnDiscover, btnRankMenu;
     private TextView mainMenuHomeTV4, tvStreakCount;
     private FirebaseUser currentUser;
@@ -68,6 +77,11 @@ public class MainMenu extends AppCompatActivity {
 
         // Run the "Solo Leveling" System Entrance Animation
         SystemEntranceAnim.applySystemEntranceAnimation(mainMenuHomeTV, systemContainer, mainMenuLogoutBtn);
+
+        if (!sWelcomeShown) {
+            sWelcomeShown = true;
+            showWelcomeOverlay();
+        }
     }
 
     @Override
@@ -153,8 +167,42 @@ public class MainMenu extends AppCompatActivity {
         });
     }
 
+    private void showWelcomeOverlay() {
+        ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+
+        View welcomeView = LayoutInflater.from(this).inflate(R.layout.item_welcome_player, null);
+
+        // Set the player name
+        TextView tvWelcome = welcomeView.findViewById(R.id.tvWelcomePlayer);
+        if (currentUser != null) {
+            String name = currentUser.getDisplayName();
+            tvWelcome.setText("WELCOME BACK, " + (name != null ? name.toUpperCase() : "PLAYER"));
+        }
+
+        // Wrap in a full-screen dim overlay
+        FrameLayout overlay = new FrameLayout(this);
+        overlay.setBackgroundColor(0xDD05050A);
+        FrameLayout.LayoutParams contentParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        contentParams.gravity = Gravity.CENTER;
+        overlay.addView(welcomeView, contentParams);
+
+        decorView.addView(overlay, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+
+        // Fade out and remove after 3 seconds
+        new Handler(Looper.getMainLooper()).postDelayed(() ->
+                overlay.animate()
+                        .alpha(0f)
+                        .setDuration(600)
+                        .withEndAction(() -> decorView.removeView(overlay))
+                        .start(),
+                3000);
+    }
+
     private void setupClickListeners(Button logoutBtn) {
         logoutBtn.setOnClickListener(v -> {
+            sWelcomeShown = false;
             mAuth.signOut();
             startActivity(new Intent(MainMenu.this, LoginMenu.class));
             finish();

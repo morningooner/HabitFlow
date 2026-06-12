@@ -1,103 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:layout_marginHorizontal="24dp"
+    app:cardBackgroundColor="#0D1117"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#3B82F6"
+    app:strokeWidth="2dp">
 
-    <LinearLayout
-        android:id="@+id/systemContainer"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/system"
-        android:orientation="vertical"
-        android:padding="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="257dp"
+        android:padding="24dp">
 
-        <!-- Header -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:letterSpacing="0.1"
-            android:shadowColor="@color/border"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="8"
-            android:text="SYSTEM NOTIFICATION"
-            android:textColor="@color/baby_blue"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+        <!-- Top-left ornaments -->
+        <View
+            android:layout_width="14dp"
+            android:layout_height="2dp"
+            android:background="#3B82F6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            android:background="@color/border"
-            android:alpha="0.5" />
+            android:layout_width="2dp"
+            android:layout_height="14dp"
+            android:background="#3B82F6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Welcome Message -->
+        <!-- Top-right ornaments -->
+        <View
+            android:layout_width="14dp"
+            android:layout_height="2dp"
+            android:background="#3B82F6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="14dp"
+            android:background="#3B82F6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- SYSTEM NOTIFICATION header -->
+        <LinearLayout
+            android:id="@+id/llWelcomeHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:letterSpacing="0.25"
+                android:text="[ SYSTEM NOTIFICATION ]"
+                android:textColor="#60A5FA"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Blue divider line -->
+        <View
+            android:id="@+id/welcomeDivider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="#1E3A5F"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llWelcomeHeader" />
+
+
+        <!-- Accent line under name -->
+
+        <TextView
+            android:id="@+id/tvWelcomeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.1"
+            android:text="WELCOME BACK,"
+            android:textColor="#9CA3AF"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.359" />
+
         <TextView
             android:id="@+id/tvWelcomePlayer"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="WELCOME, PLAYER"
-            android:textColor="@color/white"
-            android:textSize="20sp"
+            android:layout_marginTop="8dp"
+            android:letterSpacing="0.05"
+            android:shadowColor="#3B82F6"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="12"
+            android:text="PLAYER"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
             android:textStyle="bold"
-            android:letterSpacing="0.05" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvWelcomeLabel" />
+
+        <View
+            android:id="@+id/accentLine"
+            android:layout_width="60dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="14dp"
+            android:background="#3B82F6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvWelcomePlayer" />
+
+        <!-- Status row -->
+        <LinearLayout
+            android:id="@+id/llStatusRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/accentLine" />
+
+        <!-- Quest message -->
+
+        <!-- Bottom system label -->
+
+        <!-- Bottom-left ornaments -->
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/tvSystemOverride"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:text="Update your daily log below."
-            android:textColor="@color/baby_blue"
-            android:textSize="12sp"
-            android:alpha="0.8" />
-
-        <!-- Notes Input -->
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:hint="Player Notes / Daily Log"
-            android:textColorHint="@color/baby_blue"
-            app:boxStrokeColor="@color/baby_blue"
-            app:hintTextColor="@color/baby_blue">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etPlayerNotes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top"
-                android:inputType="textMultiLine"
-                android:minLines="3"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Save Button (Optional but fits the theme) -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSaveNotes"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:text="SYNC WITH SYSTEM"
-            android:textAllCaps="true"
-            android:textColor="@color/denim"
-            android:textSize="14sp"
+            android:alpha="0.4"
+            android:letterSpacing="0.15"
+            android:text="[ SYSTEM OVERRIDE ACTIVE ]"
+            android:textColor="#60A5FA"
+            android:textSize="9sp"
             android:textStyle="bold"
-            app:backgroundTint="@color/baby_blue"
-            app:cornerRadius="2dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
-    </LinearLayout>
+        <View
+            android:layout_width="14dp"
+            android:layout_height="2dp"
+            android:background="#3B82F6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_width="2dp"
+            android:layout_height="14dp"
+            android:background="#3B82F6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Bottom-right ornaments -->
+        <View
+            android:layout_width="14dp"
+            android:layout_height="2dp"
+            android:background="#3B82F6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="14dp"
+            android:background="#3B82F6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
