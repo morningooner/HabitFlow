@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:letterSpacing="0.1"
-            android:text="RANKINGS"
+            android:text="LEADERBOARD"
             android:textColor="@color/baby_blue"
             android:textSize="16sp"
             android:textStyle="bold"

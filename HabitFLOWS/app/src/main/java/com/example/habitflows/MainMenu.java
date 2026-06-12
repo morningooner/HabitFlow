@@ -62,10 +62,19 @@ public class MainMenu extends AppCompatActivity {
         btnDiscover = findViewById(R.id.btnDiscover);
         btnRankMenu = findViewById(R.id.btnRankMenu);
 
-        if (currentUser != null) {
+        mDB.collection("Users").document(currentUser.getEmail().toLowerCase().trim()).get().addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        UserModel user = doc.toObject(UserModel.class);
+                        if (user != null) {
+                            mainMenuHomeTV4.setText(user.getUsername());
+                        }
+                    }
+                });
+        /*if (currentUser != null) {
+
             String name = currentUser.getDisplayName();
             mainMenuHomeTV4.setText(name != null ? name : "User");
-        }
+        }*/
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

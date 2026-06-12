@@ -24,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -224,42 +225,86 @@ public class playHabit extends AppCompatActivity {
     }
 
     private void saveHabitProgress(String habitName) {
-        if (habitName.equals("Focus Session") || habitName.equals("Choose Habit")) return;
         if (habitName.equals("Focus Session") || habitName.equals("Choose Habit") || habitName.equals("QUEST TIMER")) return;
 
         if (mAuth.getCurrentUser() == null) return;
 
         String userEmail = mAuth.getCurrentUser().getEmail();
 
-        // Read the habit first to check if XP was already granted today
-        mDB.collection("Users").document(userEmail)
-                .collection("Habits").document(habitName)
-                .get()
-                .addOnSuccessListener(doc -> {
-                    HabitModel habit = doc.toObject(HabitModel.class);
-                    boolean alreadyDoneToday = habit != null && habit.isTodayCompleted();
+        // Read user document to get profession for XP buff calculation
+        mDB.collection("Users").document(userEmail).get().addOnSuccessListener(userDoc -> {
+            UserModel user = userDoc.toObject(UserModel.class);
+            if (user == null) return;
 
-                    if (!alreadyDoneToday) {
-                        // First completion today — increment days, mark done, record date, grant XP
-                        String today = LocalDate.now().toString();
-                        mDB.collection("Users").document(userEmail)
-                                .collection("Habits").document(habitName)
-                                .update("completedDays", FieldValue.increment(1),
-                                        "todayCompleted", true,
-                                        "completedDates", FieldValue.arrayUnion(today))
-                                .addOnSuccessListener(aVoid -> checkAllHabitsCompleted());
+            // Read the habit to check if XP was already granted today
+            mDB.collection("Users").document(userEmail)
+                    .collection("Habits").document(habitName)
+                    .get()
+                    .addOnSuccessListener(doc -> {
+                        HabitModel habit = doc.toObject(HabitModel.class);
+                        boolean alreadyDoneToday = habit != null && habit.isTodayCompleted();
 
-                        mDB.collection("Users").document(userEmail)
-                                .update("xp", FieldValue.increment(10))
-                                .addOnSuccessListener(aVoid ->
-                                        Toast.makeText(this, "QUEST COMPLETE! +10 XP earned.", Toast.LENGTH_LONG).show());
-                    } else {
-                        // Already completed today — session recorded but no extra XP
-                        Toast.makeText(this, "Session complete! Habit already done today — no extra XP.", Toast.LENGTH_SHORT).show();
-                        checkAllHabitsCompleted();
-                    }
-                })
-                .addOnFailureListener(e -> Log.e("PlayHabit", "Error reading habit", e));
+                        if (!alreadyDoneToday) {
+                            // First completion today — increment days, mark done, record date
+                            String today = LocalDate.now().toString();
+                            mDB.collection("Users").document(userEmail)
+                                    .collection("Habits").document(habitName)
+                                    .update("completedDays", FieldValue.increment(1),
+                                            "todayCompleted", true,
+                                            "completedDates", FieldValue.arrayUnion(today))
+                                    .addOnSuccessListener(aVoid -> checkAllHabitsCompleted());
+
+                            // Calculate XP with 20% buff based on profession and day
+                            int xpToGrant = calculateXpWithBuff(user.getProfession());
+                            boolean hasBuff = xpToGrant > 10;
+
+                            mDB.collection("Users").document(userEmail)
+                                    .update("xp", FieldValue.increment(xpToGrant))
+                                    .addOnSuccessListener(aVoid -> {
+                                        String message = "QUEST COMPLETE! +" + xpToGrant + " XP earned.";
+                                        if (hasBuff) {
+                                            message += " (20% Profession Buff Applied!)";
+                                        }
+                                        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                                    });
+                        } else {
+                            // Already completed today — session recorded but no extra XP
+                            Toast.makeText(this, "Session complete! Habit already done today — no extra XP.", Toast.LENGTH_SHORT).show();
+                            checkAllHabitsCompleted();
+                        }
+                    })
+                    .addOnFailureListener(e -> Log.e("PlayHabit", "Error reading habit", e));
+        });
+    }
+
+    private int calculateXpWithBuff(String profession) {
+        int baseXp = 10;
+        DayOfWeek day = LocalDate.now().getDayOfWeek();
+        boolean isBuffDay = false;
+
+        // Monday: Mage, Tuesday: Assassin, Wednesday: Fighter, Thursday: Marksman, Friday: Tank
+        switch (day) {
+            case MONDAY:
+                isBuffDay = "Mage".equalsIgnoreCase(profession);
+                break;
+            case TUESDAY:
+                isBuffDay = "Assassin".equalsIgnoreCase(profession);
+                break;
+            case WEDNESDAY:
+                isBuffDay = "Fighter".equalsIgnoreCase(profession);
+                break;
+            case THURSDAY:
+                isBuffDay = "Marksman".equalsIgnoreCase(profession);
+                break;
+            case FRIDAY:
+                isBuffDay = "Tank".equalsIgnoreCase(profession);
+                break;
+        }
+
+        if (isBuffDay) {
+            return 12; // 20% buff on 10 XP
+        }
+        return baseXp;
     }
 
     private void checkAllHabitsCompleted() {
