@@ -33,7 +33,7 @@ public class MainMenu extends AppCompatActivity {
 
     // Shown once per login session; reset on logout
     private static boolean sWelcomeShown = false;
-    private Button btnProfile, btnHabit, btnStatistics, btnPlayHabit, btnLeaderboard, btnDiscover, btnRankMenu;
+    private Button btnProfile, btnHabit, btnStatistics, btnPlayHabit, btnLeaderboard, btnDiscover, btnRankMenu, mainMenuLogoutBtn;
     private TextView mainMenuHomeTV4, tvStreakCount;
     private FirebaseUser currentUser;
 
@@ -52,7 +52,7 @@ public class MainMenu extends AppCompatActivity {
         LinearLayout systemContainer = findViewById(R.id.systemContainer);
         mainMenuHomeTV4 = findViewById(R.id.mainMenuHomeTV4);
         tvStreakCount = findViewById(R.id.tvStreakCount);
-        Button mainMenuLogoutBtn = findViewById(R.id.mainMenuLogoutBtn);
+        mainMenuLogoutBtn = findViewById(R.id.mainMenuLogoutBtn);
 
         btnProfile = findViewById(R.id.Profile);
         btnHabit = findViewById(R.id.btnHabit);
@@ -62,19 +62,16 @@ public class MainMenu extends AppCompatActivity {
         btnDiscover = findViewById(R.id.btnDiscover);
         btnRankMenu = findViewById(R.id.btnRankMenu);
 
-        mDB.collection("Users").document(currentUser.getEmail().toLowerCase().trim()).get().addOnSuccessListener(doc -> {
-                    if (doc.exists()) {
-                        UserModel user = doc.toObject(UserModel.class);
-                        if (user != null) {
-                            mainMenuHomeTV4.setText(user.getUsername());
-                        }
+        if (currentUser != null && currentUser.getEmail() != null) {
+            mDB.collection("Users").document(currentUser.getEmail().toLowerCase().trim()).get().addOnSuccessListener(doc -> {
+                if (doc.exists()) {
+                    UserModel user = doc.toObject(UserModel.class);
+                    if (user != null) {
+                        mainMenuHomeTV4.setText(user.getUsername());
                     }
-                });
-        /*if (currentUser != null) {
-
-            String name = currentUser.getDisplayName();
-            mainMenuHomeTV4.setText(name != null ? name : "User");
-        }*/
+                }
+            });
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -82,6 +79,7 @@ public class MainMenu extends AppCompatActivity {
             return insets;
         });
 
+        // Initialize all click listeners including logout
         setupClickListeners(mainMenuLogoutBtn);
 
         // Run the "Solo Leveling" System Entrance Animation
@@ -191,6 +189,9 @@ public class MainMenu extends AppCompatActivity {
         // Wrap in a full-screen dim overlay
         FrameLayout overlay = new FrameLayout(this);
         overlay.setBackgroundColor(0xDD05050A);
+        overlay.setClickable(true);
+        overlay.setFocusable(true);
+        
         FrameLayout.LayoutParams contentParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         contentParams.gravity = Gravity.CENTER;
@@ -210,12 +211,17 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void setupClickListeners(Button logoutBtn) {
-        logoutBtn.setOnClickListener(v -> {
-            sWelcomeShown = false;
-            mAuth.signOut();
-            startActivity(new Intent(MainMenu.this, LoginMenu.class));
-            finish();
-        });
+        if (logoutBtn != null) {
+            logoutBtn.setOnClickListener(v -> {
+                sWelcomeShown = false;
+                mAuth.signOut();
+                Intent intent = new Intent(MainMenu.this, LoginMenu.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            });
+        }
+        
         btnHabit.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, Habit.class)));
         btnProfile.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, Profile.class)));
         btnStatistics.setOnClickListener(v -> startActivity(new Intent(MainMenu.this, Statistics.class)));
